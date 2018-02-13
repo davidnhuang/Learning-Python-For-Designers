@@ -1,0 +1,404 @@
+# David Huang
+# Computer Science for Designers and Artists
+# Instructor : Alex Seropian
+# 10 / 20 / 2017
+# Version 4.4
+
+# ------------------------------------- IMPORTS -------------------------------------
+import random
+import time
+
+# ------------------------------------- DATA -------------------------------------
+# TEAM DATA
+# TeamA Basic Stats
+TeamA = 'Team NiP'
+TeamA_side = 'None' # Is TeamA on the t side or ct
+TeamA_score = 0 # Total amount of wins for team TeamA
+TeamA_players_alive = 5 # Total TeamA t side players alive
+
+# Stats below only apply as TeamA as CT side
+TeamA_ct_elim = 48.2 # This is how likely TeamA will eliminate the opposing team as ct
+TeamA_bomb_defuse = 55 # This is how likely TeamA will defuse a bomb before it detonates
+
+# Stats below only apply as TeamA as T side
+TeamA_bomb_plant = 33 # This is how likely TeamA will successfully plant the bomb
+
+# TeamB percentages
+TeamB = 'Team Fnatic'
+TeamB_side = 'None'
+TeamB_score = 0 # Total amount of wins for team TeamB
+TeamB_players_alive = 5 # Total TeamA t side players alive
+
+# Stats below only apply as TeamB as CT side
+TeamB_ct_elim = 48.1 # This is how likely TeamB will eliminate the opposing team as ct
+TeamB_bomb_defuse = 50 # This is how likely TeamB will defuse a bomb before it detonates
+
+# Stats below only apply as TeamB as T side
+TeamB_bomb_plant = 35 # This is how likely TeamB will successfully plant the bomb
+
+
+
+# GAME STATES & FEATURES
+total_rounds_played = 0 # How many rounds have been played; max 30
+bomb_planted = False # Whether the bomb is planted or not; starts as False since bomb is not planted
+bomb_defused = False # After bomb_planted == True, displays whether bomb is defused or not; can only occurs if t_side
+bomb_detonated = False # Whether the bomb detonated or not
+bomb_dropped = False # Did the t side drop the bomb? Always starts with Flase
+bomb_planted_counter = 0 # this makes sure that the bomb can only be planted once
+
+guns = ['M4A1-S', 'M4A4', 'AWP', 'SSG-08', 'USP-S', 'CZ75-Auto', 'Desert Eagle', 'Knife', 'AK-47', 'Galil', 'AWP',
+        'SSG-08', 'Glock-18', 'Tech-9', 'Desert Eagle'] # are we rushing in? or are we going sneaky-beaky like?
+
+# GAME MESSAGES
+ct_win = 'COUNTER TERRORISTS WIN'
+t_win = 'TERRORISTS WIN'
+bomb_message = 'BOMB HAS BEEN PLANTED!'
+
+
+
+# TEAM DATASETS
+# todo - Dataset is organized as follow:
+# [Team name, CT or T side, Total Score won, How many players alive, Elimination rate based as t, Bomb plant success rate, Elimination
+# rate based as ct, Bomb defuse sucess rate]
+
+TeamA_stats = [TeamA, TeamA_side, TeamA_score, TeamA_players_alive, TeamA_bomb_plant, TeamA_ct_elim, TeamA_bomb_defuse]
+
+TeamB_stats = [TeamB, TeamB_side, TeamB_score, TeamB_players_alive, TeamB_bomb_plant, TeamB_ct_elim, TeamB_bomb_defuse]
+
+
+
+# ------------------------------------- VARIABLES -------------------------------------
+MAX_ROUND_PLAYS = 30 # Both teams need to compete within 30 rounds
+GAME_WIN_ROUND = 16 # If either TeamA_total_wins == 16 or TeamB_total_wins == 16, the team won
+HALFTIME_ROUND = 15 # If total_rounds_played == 15, switch ct to t, and t to ct
+MAX_HALVES = 2 # there will only be 2 halves in a game, both 15 rounds
+CT_T_SURVIVE = 6 # There is a 6% chance that both ct and t survive the exchange
+
+
+
+# ------------------------------------- FUNCTIONS -------------------------------------
+def team_info(TeamA_stats, TeamB_stats): # team information declared upon the start of each half
+    print ('=' * 55)
+    print (TeamA_stats[0], 'will play as ', TeamA_stats[1])
+    print (TeamB_stats[0], 'will play as ', TeamB_stats[1])
+    print ('=' * 55)
+
+
+# Roll which side becomes ct_side and imports team data
+def ct_roll(TeamA_stats, TeamB_stats):
+    team_roll = [TeamA_stats[0], TeamB_stats[0]]
+    ct_side = team_roll.pop(random.randint(0, 1)) # Both teams have a 50% chances of being ct_side
+    t_side = team_roll[0] # Return the remaining team as t_side
+    sides_decided = [t_side, ct_side]
+    if sides_decided[0] == 'NiP':
+        TeamA_stats[1] = 'Counter Terrorists' # If TeamA is rolled, replace side as 'Counter Terrorist'
+        TeamB_stats[1] = 'Terrorists'
+        return (TeamA_stats, TeamB_stats)
+    else:
+        TeamA_stats[1] = 'Terrorists' # If TeamB is rolled, replace side as 'Counter Terrorist'
+        TeamB_stats[1] = 'Counter Terrorists'
+        return (TeamA_stats, TeamB_stats)
+
+
+# Half time switching teams
+def half_time(TeamA_stats, TeamB_stats):
+    print ('')
+    print ('='*55)
+    print ('HALF TIME, SWITCHING SIDES...')
+    print('=' * 55)
+    print('')
+    time.sleep(1.5)
+    if TeamA_stats[1] == 'Counter Terrorists': # Tests if TeamA was ct for the first half of the game
+        TeamA_stats[1] = 'Terrorists' # Change TeamA to T
+        TeamB_stats[1] = 'Counter Terrorists' # Change TeamB to CT
+        return (TeamA_stats, TeamB_stats)
+    else:
+        TeamA_stats[1] = 'Counter Terrorists' # Change TeamA to CT
+        TeamB_stats[1] = 'Terrorists'
+        return (TeamA_stats, TeamB_stats)
+
+
+def ct_win_message(): # victory message displayed if ct were to win the round
+    print('')
+    print('=' * 15, ct_win, '=' * 15)
+    print(TeamA_stats[0], ':', TeamA_stats[2], TeamB_stats[0], ':', TeamB_stats[2])
+
+
+def t_win_message(): # victory message displayed if t were to win the round
+    print('')
+    print('=' * 15, t_win, '=' * 15)
+    print(TeamA_stats[0], ':', TeamA_stats[2], TeamB_stats[0], ':', TeamB_stats[2])
+
+
+def team_score_callout():
+    if TeamA_stats[1] == 'Counter Terrorists':
+        print('Counter Terrorists: ', TeamA_stats[3], ' VS. ', 'Terrorists: ', TeamB_stats[3])
+    else:
+        print('Counter Terrorists: ', TeamB_stats[3], ' VS. ', 'Terrorists: ', TeamA_stats[3])
+
+
+# The most important function; simulates an exchange / gunfight between ct and t, and dictates who lives and who dies based on dataset
+def player_encounter(TeamA_stats, TeamB_stats):
+    if TeamA_stats[1] == 'Counter Terrorists': # import TeamA's ct_elimination rate
+        if random.randint(0, 100) <= int(TeamA_stats[5]): # if it is, import TeamA's ct kill percentage
+            TeamB_stats[3] -= 1 # if it is successful, TeamA kills a member of TeamB
+            # both sides always start with pistols in the beginning of each half
+            if total_rounds_played <= 1 or total_rounds_played == 15:
+                guns_used = guns[random.randint(4, 5)] # in the first round, ct can only kill t with pistols
+            else:
+                guns_used = guns[random.randint(0, 7)] # in subsequent round, ct can kill with all weapon
+            print (TeamA_stats[0], 'killed a player on', TeamB_stats[0], 'with', guns_used) # output the result of each engagement
+            team_score_callout()
+        # todo - fix the no engage range
+        elif TeamA_stats[5] + CT_T_SURVIVE <= random.randint(0, 100) >= TeamA_stats[5]: # there is a 6% margin in which either team survives the engagement
+            print ('No one is killed yet')
+            team_score_callout()
+        else: # if ct failed to kill the t, and t kills ct
+            TeamA_stats[3] -= 1 # kill a player on ct
+            # both sides always start with pistols in the beginning of each half
+            if total_rounds_played == 0 or total_rounds_played == 15:
+                guns_used = guns[random.randint(4, 5)]
+            else:
+                guns_used = guns[random.randint(0, 7)]
+            print (TeamB_stats[0], 'killed a player on', TeamA_stats[0], 'with', guns_used)
+            team_score_callout()
+    else:  # import TeamB's ct_elimination rate
+        if random.randint(0, 100) <= int(TeamB_stats[5]): # if it falls in their success elim range
+            TeamA_stats[3] -= 1 # kill a player on t side
+            if total_rounds_played == 0 or total_rounds_played == 15:
+                guns_used = guns[random.randint(4, 5)]
+            else:
+                guns_used = guns[random.randint(0, 7)]
+            print (TeamB_stats[0], 'killed a player on', TeamA_stats[0], 'with', guns_used)
+            team_score_callout()
+        elif TeamB_stats[5] + CT_T_SURVIVE <= random.randint(0, 100) >= TeamB_stats[5]:  # there is a 6% margin in which both team survives the engagement
+            print ('No one is killed yet')
+            team_score_callout()
+        else:
+            TeamB_stats[3] -= 1
+            if total_rounds_played == 0 or total_rounds_played == 15:
+                guns_used = guns[random.randint(12, 13)]
+            else:
+                guns_used = guns[random.randint(7, 14)]
+            print (TeamA_stats[0], 'killed a player on', TeamB_stats[0], 'with', guns_used)
+            team_score_callout()
+
+
+# This function determines the level of confidence for the t side to get the most out of their bomb plants
+def bomb_plant_confidence(TeamA_stats, TeamB_stats):
+    # t only feel confident to plant a bomb when:
+    #   1. when the t side has a significant advantage in terms of:
+    #        when t side has significantly more players than t (>= 3 more players), so planting would add pressure to t
+    #        when it is 1 vs. 1, and a failed defuse would result in a t victory
+    if TeamA_stats[1] == 'Terrorists':  # checks if TeamA is playing as t
+        if TeamA_stats[3] - TeamB_stats[3] >= 2: # when t side has 2 or more players than ct side
+            return True
+        elif TeamA_stats[3] >= 1 and TeamB_stats[3] == 1: # 1 vs 1 scenario or when ct side is at a one man standing scenario
+            return True
+    else:
+        if TeamB_stats[3] - TeamA_stats[3] >= 2:
+            return True
+        elif TeamB_stats[3] >= 1 and TeamA_stats[3] == 1:
+            return True
+
+
+def bomb_plant(TeamA_stats, TeamB_stats, bomb_planted): # how likely t can successfully plant the bomb
+    if bomb_planted == False and total_rounds_played < MAX_ROUND_PLAYS: # can only plant if the bomb has not been planted before
+        if bomb_plant_confidence(TeamA_stats, TeamB_stats) == True: # if only t side feels confident of a successful plant
+            if TeamA_stats[1] == 'Terrorists': # if TeamA is t side
+                if random.randint(0,100) <= TeamA_stats[4]: # if the percentage falls in TeamA's success range
+                    bomb_planted = True # if successful, bomb is planted
+                    return bomb_planted
+            elif TeamB_stats[1] == 'Terrorists': # if TeamB is playing as t
+                if random.randint(0,100) <= TeamB_stats[4]: # if the roll falls under TeamB's chance of a bomb plant
+                    bomb_planted = True # bomb planted success
+                    return bomb_planted
+
+
+def bomb_defusal(TeamA_stats, TeamB_stats):
+    if TeamA_stats[1] == 'Counter Terrorists': # checks if TeamA is ct
+        if random.randint(0, 100) <= TeamA_stats[6]: # importing TeamA's defuse success rate
+            return True
+        else:
+            return False
+    else: # checks if TeamB is playing as ct
+        if random.randint(0, 100) <= TeamB_stats[6]: # importing TeamB's defuse success rate
+            return True
+        else:
+            return False
+
+
+def round_fate(TeamA_stats, TeamB_stats): # determines the fate of the round
+    if TeamA_stats[1] == 'Counter Terrorists': # if NiP is playing as ct
+        if TeamB_stats[3] == 0: # if t side is eliminated and all killed
+            TeamA_stats[2] += 1 # ct wins the round through elimination
+            ct_win_message()
+        elif TeamA_stats[3] == 0: # if ct is eliminated by t
+            TeamB_stats[2] += 1 # t wins the round through elimination
+            t_win_message()
+        elif bomb_defused == True: # if ct defuses the bomb, ct wins
+            TeamA_stats[2] += 1
+            ct_win_message()
+        elif bomb_defused == False: # if bomb detonates, t wins
+            TeamB_stats[2] += 1
+            t_win_message()
+    else:
+        if TeamA_stats[3] == 0: # if t side is eliminated and all killed
+            TeamB_stats[2] += 1 # ct wins the round through elimination
+            ct_win_message()
+        elif TeamB_stats[3] == 0: # if ct is eliminated by t
+            TeamA_stats[2] += 1 # t wins the round through elimination
+            t_win_message()
+        elif bomb_defused == True: # if ct defuses the bomb, ct wins
+            TeamB_stats[2] += 1
+            ct_win_message()
+        elif bomb_defused == False: # if bomb detonates, t wins
+            TeamA_stats[2] += 1
+            t_win_message()
+
+
+def bomb_defusing(TeamA_stats, TeamB_stats):
+    if TeamA_stats[1] == 'Counter Terrorists' and TeamA_stats[3] > 0 and TeamB_stats[3] <= 2:  # if TeamA is ct after bomb plant
+        print('Defusing...')  # Defusing starts here
+        time.sleep(4) # ...just adding a bit of suspense and drama...kek!
+        if bomb_defusal(TeamA_stats, TeamB_stats) == True:  # if the percentage falls in favor of defuse success range
+            TeamA_stats[2] += 1  # if yes, ct wins for the round
+            print('Bomb has been defused!')
+            time.sleep(1.5)
+            ct_win_message()
+        else:  # if the percentage falls out of the success range, the bomb is not successfully defused and detonates
+            TeamB_stats[2] += 1
+            print('Bomb Blew Up!')
+            time.sleep(1.5)
+            t_win_message()  # terrorists automatically wins on detonation
+    elif TeamB_stats[1] == 'Counter Terrorists' and TeamB_stats[3] > 0 and TeamA_stats[3] <= 2:  # if TeamB is ct after bomb plant
+        print('Defusing...')
+        time.sleep(4) #...just adding a bit of suspense and drama...kek!
+        if bomb_defusal(TeamA_stats, TeamB_stats) == True:  # if the percentage falls in favor of defuse success range
+            TeamB_stats[2] += 1  # if yes, ct wins for the round
+            print('Bomb has been defused!')
+            time.sleep(1.5)
+            ct_win_message()
+        else:  # if the percentage falls out of the success range, the bomb is not successfully defused and detonates
+            TeamA_stats[2] += 1
+            print('Bomb Blew Up!')
+            time.sleep(1.5)
+            t_win_message()  # terrorists automatically wins on detonation
+    # If t side bomb is planted and ct is eliminated
+    if TeamA_stats[1] == 'Terrorists' and TeamA_stats[3] > 0 and TeamB_stats[3] == 0:  # if TeamA is playing as t side
+        round_fate(TeamA_stats, TeamB_stats)
+    elif TeamB_stats[1] == 'Terrorists' and TeamB_stats[3] > 0 and TeamA_stats[3] == 0:  # if TeamB is playing as t side
+        round_fate(TeamA_stats, TeamB_stats)
+
+
+def game_winner(TeamA_stats, TeamB_stats, total_rounds_played): # This is the winning message if either team wins the game
+    if TeamA_stats[2] == 16: # Team wins the game by winning a total of 16 matches
+        print (TeamA_stats[0], 'clinched the match with 16 wins!')
+        print ('')
+        print ('AND THE WINNER OF ESEA AND $50,000 GOES TO', TeamA_stats[0])
+        print('')
+        print('AND THE CROWD GOES WILD!')
+        print('')
+        print('*' * 60, 'END OF ESEA TOURNAMENT', '*' * 60)
+        print('')
+    elif TeamB_stats[2] == 16: # Team wins the game by winning a total of 16 matches
+        print (TeamB_stats[0], 'clinched the match with 16 wins!')
+        print('')
+        print('AND THE WINNER OF ESEA AND $50,000 GOES TO', TeamB_stats[0])
+        print('AND THE CROWD GOES WILD!')
+        print('')
+        print('*' * 60, 'END OF ESEA TOURNAMENT', '*' * 60)
+        print('')
+
+
+def game_tie (): # Aside from winning, both teams have the possibility of tying the game
+    print(TeamA, 'and', TeamB, 'tied the game!')
+    print('')
+    print('TUNE IN NEXT WEEK FOR THE TIE BREAKING GAME BETWEEN', TeamA, 'AND', TeamB)
+    print('')
+
+
+def round_number_callout():
+    print('')
+    print('-' * 55)
+    print('Round', total_rounds_played + 1, '/',MAX_ROUND_PLAYS)  # displays the round the teams are currently playing in
+    print('-' * 55)
+
+
+# ------------------------------------- MAIN GAME LOOP -------------------------------------
+# Todo - Improve Readability of Game
+print ('')
+print('*'*50,'WELCOME TO THE LAST GAME OF THE ESEA TOURNAMENT', '*'*50)
+print ('')
+print( 'THIS WILL BE THE GAME BETWEEN', TeamA , 'AND', TeamB, '!')
+print ('')
+print ('WHO WILL CLAIM THE PRIZE OF $50,000 AND THE WORLD CHAMPION TITLE?')
+print('')
+start_input = input('Are You Ready? (Y)es or (N)o : ')
+print ('')
+
+if start_input == 'Y' or start_input == 'y':
+    print ('Flipping for teams...')
+    time.sleep(1.5)
+    first_half_sides = ct_roll(TeamA_stats, TeamB_stats) # Rolls for the teams for the first half
+    team_info(TeamA_stats, TeamB_stats) # prints in the information for both teams
+    time.sleep(1.5)
+
+    # --------------  GAME HALF -------------- #
+    for game_half in range (MAX_HALVES):
+        # start first half
+        for rounds in range (HALFTIME_ROUND): # iterate 15 rounds, which is one half of the game
+            # Round Info
+            round_number_callout()
+            time.sleep(1.5) # pause
+
+            # -------------- ROUND -------------- #\\
+            kill_time = time.time()
+            while TeamA_stats[3] > 0 and TeamB_stats[3] > 0: # while both team are alive
+                print('')
+                bomb_planted_counter = 0
+                player_encounter(TeamA_stats, TeamB_stats) # while both teams are killing each other
+                time.sleep(1.5) # pause
+                # IMPLEMENT BOMB DROP HERE
+                if bomb_planted_counter == 0: # this makes sure that the bomb can only be planted ONCE
+                    if bomb_plant_confidence(TeamA_stats, TeamB_stats) == True: # if the t feels confident to plant the bomb or not
+                        if bomb_plant(TeamA_stats, TeamB_stats, bomb_planted) == True: # if the bomb is successfully planted or not
+                            bomb_planted = True
+                            bomb_planted_counter += 1
+                            print (bomb_message)
+                            time.sleep(1.5) # pause
+
+            if bomb_planted == True: # if bomb has been planted within the round
+                # If ct are alive after the bomb is planted and t side is eliminated
+                bomb_defusing(TeamA_stats, TeamB_stats)
+                time.sleep(1.5)
+            else:
+                round_fate(TeamA_stats, TeamB_stats)
+                time.sleep(1.5) # pause
+
+            # end of round reset
+            total_rounds_played += 1 # add one round number after the round is over
+            bomb_planted_counter = 0  # reset bomb_counter
+            bomb_planted = False  # reset the bomb so that it is not planted yet
+            bomb_detonated = False  # reset bomb if it were detonated
+            TeamA_stats[3] = 5  # reviving players for next round
+            TeamB_stats[3] = 5  # reviving players for next round
+
+            # declares the winner
+            if TeamA_stats[2] == 16 or TeamB_stats[2] == 16:
+                game_winner(TeamA_stats, TeamB_stats, total_rounds_played)
+                break
+            if TeamA_stats[2] == 15 and TeamB_stats[2] == 15:
+                game_tie()
+                break
+
+        # end of first half, switching sides
+        if total_rounds_played == 15:
+            first_half_sides = half_time(TeamA_stats, TeamB_stats) # switches side on half time
+            team_info(TeamA_stats, TeamB_stats) # call out to see the teams switched
+            time.sleep(2)
+elif start_input == 'N' or start_input == 'n':
+    print('Game Canceled...')
+    print ('BOOOOOOOOOOOOO!')
+else:
+    print('Very good! You are now in possession of the Aperture Science Handheld Portal Device.')
