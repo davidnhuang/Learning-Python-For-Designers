@@ -1,0 +1,284 @@
+# David Huang
+# Alexander Seropian
+# Computer Science for Designers and Artists
+# Version 1.0 - Alpha
+# Nov 22 2017
+
+# wabalaba dub dub - Rick Sanchez
+
+# Imports
+import pygame
+import random
+
+# ----- CONSTANTS ----- #
+# game initializations REQUIRED
+pygame.init() # initiates pygame module
+pygame.font.init() # initiates pygame font module
+
+# game settings
+TITLE_FONT = pygame.font.Font('/Users/David/Documents/GitHub/Final_Project/assets/uni0553-webfont.ttf', 40)
+SUBTITLE_FONT = pygame.font.Font('/Users/David/Documents/GitHub/Final_Project/assets/uni0553-webfont.ttf', 20)
+SCREEN_SIZE = 800 # this will be the dimensions of the window initiated
+GAME_DISPLAY = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE)) # this will initialize the screen to SCREEN_SIZE
+GAME_EXIT = False # this assigns the game state to run
+pygame.display.set_caption('Quantum Accountant 1.0 - Alpha') # sets the title for the window
+BG_FULLSCREEN_POS = (0,0) # this renders the background origin (0,0)
+USER_START = False # did the user start the game yet? defaults at false
+OFFICE_HOURS = True # did the user complete a day's work as Jerry?
+DAY_OVER = False # did the user complete a day's work as Jerry?
+INDOOR = False # is the user inside building or outside?
+TERMINAL_INTERFACE = False
+PROMPT_PLACE = (500, SCREEN_SIZE * 0.9)
+
+# color
+BLACK = (0, 0, 0)
+WHITE = ( 255, 255, 255)
+
+# character settings
+JERRY_RIGHT = '/Users/David/Documents/GitHub/Final_Project/assets/character/jerry_right-01.png' # Jerry sprite facing right
+JERRY_LEFT = '/Users/David/Documents/GitHub/Final_Project/assets/character/jerry_left-01.png' # Jerry sprite facing left
+
+# character dialogues
+bubble_1 = ''
+bubble_2 = ''
+bubble_3 = ''
+bubble_4 = ''
+bubble_5 = ''
+character_dialogue = [None, bubble_1, bubble_2, bubble_3, bubble_4, bubble_5]
+
+# scene background settings
+# exteriors
+OFFICE_EXTERIOR = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Office_exterior.png'
+BUS_STOP = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Bus_Stop.png'
+BAR_EXTERIOR = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Bar_exterior.png'
+APARTMENT_EXTERIOR = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Apartment_exterior.png'
+CITY_END = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/End_of_city.png'
+HIGHWAY_1 = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Highway_1.png'
+HIGHWAY_2 = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Highway_2.png'
+HIGHWAY_END = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Highway_end.png'
+FOREST_1 = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Forest_1.png'
+FOREST_2 = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Forest_2.png'
+CAVE_1 = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Cave_1.png'
+CAVE_2 = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Cave_2.png'
+TREASURE_END = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Cave_3.png'
+
+# interiors
+OFFICE_INTERIOR_1 = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Inside_Office_1_A.png'
+OFFICE_INTERIOR_2 = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Inside_Office_2.png'
+OFFICE_INTERIOR_3 = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Inside_Office_3.png'
+OFFICE_END = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Office_End.png'
+BAR_INTERIOR_AFTERWORK = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Bar_interior_afterwork.png'
+BAR_INTERIOR = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Bar_interior.png'
+OFFICE_BOSS = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Boss_Office.png'
+
+# other
+SCREEN = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Screen.png'
+
+# scene foreground settings
+FOREGROUND_LAMP = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/foreground_lamp-01.png'
+FOREGROUND_BUS_STOP = '/Users/David/Documents/GitHub/Final_Project/assets/scene bg/Bus_Stop-13.png'
+
+# ----- Variables ----- #
+# game scenes
+scene = 1 # which scene the story is on, always starts at scene 1
+intro_title = TITLE_FONT.render('QUANTUM ACCOUNTANT', False, (WHITE))
+intro_subtitle = SUBTITLE_FONT.render('v1.1.0.alpha.1.0.0.1.1.1.1.1', False, (WHITE))
+input_prompt = SUBTITLE_FONT.render('press S to start', False, (WHITE))
+enter_prompt = SUBTITLE_FONT.render('press SPACE to enter', False, (WHITE))
+pickup_prompt = SUBTITLE_FONT.render('press SPACE to answer', False, (WHITE))
+exit_prompt = SUBTITLE_FONT.render('press E to exit', False, (WHITE))
+
+# character positioning
+# Jerry
+jerry_x = SCREEN_SIZE * 0.3 # x coordinate for Jerry
+jerry_y = SCREEN_SIZE * 0.55 # y coordinate for Jerry
+
+jerry_x_indoor = 0
+jerry_y_indoor = SCREEN_SIZE * 0.4
+
+character_direction = True # character direction starts as true, which means character is facing right
+
+# Coworker
+
+# Jerry Movement
+delta_x = 0 # user input change for Jerry_x
+delta_y = 0 # user input change for Jerry_y
+
+# Targets
+office_door_x = 300
+office_door_y = SCREEN_SIZE * 0.8
+
+office_detect_min = office_door_x - 20
+office_detect_max = office_door_x + 100
+
+office_exit_x = 10
+office_exit_min = office_exit_x - 20
+office_exit_max = office_exit_x + 50
+
+computer_answer_x = 250
+computer_answer_min = computer_answer_x - 20
+computer_answer_max = computer_answer_x + 100
+
+# ----- Functions ----- #
+def bg_render(bg): # renders background programmatically
+    png_img = pygame.image.load(bg) # loads the bg image
+    GAME_DISPLAY.blit(png_img, BG_FULLSCREEN_POS) # spawns the bg image at origin 0,0 position
+
+def sprite(x, y, character_right, character_left, direction): # programmatically spawns sprites to x and y location
+    if direction == True:
+        if INDOOR == False:
+            character_png = pygame.image.load(character_right) # load the character's PNG
+            GAME_DISPLAY.blit(character_png, (x, y)) # spawn PNG at x y location
+        else:
+            character_png = pygame.image.load(character_right)
+            enlarged_character = pygame.transform.scale(character_png, (250,250))
+            GAME_DISPLAY.blit(enlarged_character, (x, y))
+    else:
+        if INDOOR == False:
+            character_png = pygame.image.load(character_left)
+            GAME_DISPLAY.blit(character_png, (x, y))
+        else:
+            character_png = pygame.image.load(character_left)
+            enlarged_character = pygame.transform.scale(character_png, (250,250))
+            GAME_DISPLAY.blit(enlarged_character, (x, y))
+
+def scene_change(): # changing the scene based on Jerry's position
+    if INDOOR == False: # outdoor scenes
+        if scene == 4:
+            bg_render(CITY_END)
+        elif scene == 3:
+            bg_render(APARTMENT_EXTERIOR)
+        elif scene == 2:
+            bg_render(BAR_EXTERIOR)
+        elif scene == 1: # if the scene is 1 (starting scene)
+            bg_render(OFFICE_EXTERIOR) # render this scene
+        elif scene == 0:
+            bg_render(BUS_STOP)
+        elif scene == -1:
+            bg_render(HIGHWAY_1)
+        elif scene == -2:
+            bg_render(HIGHWAY_2)
+        elif scene == -3:
+            bg_render(HIGHWAY_END)
+    else: # indoor scenes
+        if scene == 0:
+            bg_render(OFFICE_BOSS)
+        elif scene == 1:
+            bg_render(OFFICE_INTERIOR_1)
+        elif scene == 2:
+            bg_render(OFFICE_INTERIOR_2)
+        elif scene == 3:
+            bg_render(OFFICE_INTERIOR_3)
+        elif scene == 4:
+            bg_render(OFFICE_END)
+
+def detect_collide(scene_num, char_x, target_x_min, target_x_max): # detects whether a character has collided with Target or not
+    if scene == scene_num and target_x_min <= char_x <= target_x_max: # if character is within 40 pixel from Target
+        return True # return True for collide
+    else:
+        return False
+
+def prompt():
+    if collision == True:
+        if INDOOR == False: # prompts outside of buildings
+            if scene == 1:
+                GAME_DISPLAY.blit(enter_prompt, PROMPT_PLACE)
+        else: # prompts inside of buildings
+            if scene == 1: # if it is the first scene of the office
+                if computer_answer_min <= jerry_x_indoor <= computer_answer_max:
+                    GAME_DISPLAY.blit(pickup_prompt, PROMPT_PLACE)
+                elif office_exit_min <= jerry_x_indoor <= office_exit_max:
+                    GAME_DISPLAY.blit (exit_prompt, PROMPT_PLACE)
+
+
+def computer_screen():
+    if TERMINAL_INTERFACE == True:
+        bg_render(SCREEN)
+
+def starting_screen(scene):
+    if USER_START == False and scene == 1: # starting screen
+        GAME_DISPLAY.fill(BLACK)
+        GAME_DISPLAY.blit(intro_title, (140, SCREEN_SIZE*0.2))
+        GAME_DISPLAY.blit(intro_subtitle, (280, SCREEN_SIZE * 0.3))
+        GAME_DISPLAY.blit(input_prompt, (260, SCREEN_SIZE * 0.7))
+
+def foreground():
+    if INDOOR == False:
+        if scene == 0 or scene == 1 or scene == 2 or scene == 3 or scene == 4:
+            bg_render(FOREGROUND_LAMP)
+        if scene == 0:
+            bg_render(FOREGROUND_BUS_STOP)
+
+# Main Loop
+while not GAME_EXIT:
+    for event in pygame.event.get():
+        # if the user presses the red x button on top left hand corner
+        if event.type == pygame.QUIT:
+            GAME_EXIT = True # quit out the game
+
+        if event.type == pygame.KEYDOWN: # detects whether there has been a key press input
+            if event.key == pygame.K_LEFT: # if it is the left arrow key
+                character_direction = False # turn the character to the left
+                delta_x = -10 # move x to the left by 10 pixels per input
+            elif event.key == pygame.K_RIGHT: # if it is the right arrow key
+                character_direction = True # turn the character to the right
+                delta_x = 10 # move x to the right by 10 pixels per input
+            elif event.key == pygame.K_s: # if it is the space key
+                USER_START = True # means user has started the game
+            elif event.key == pygame.K_e:
+                if INDOOR == True and scene == 1 and office_exit_min <= jerry_x_indoor <= office_exit_max:
+                    INDOOR = False
+            elif event.key == pygame.K_SPACE:
+                if scene == 1 and office_detect_min <= jerry_x <= office_detect_max:
+                    INDOOR = True
+                if INDOOR == True and scene == 1 and computer_answer_min <= jerry_x_indoor <= computer_answer_max:
+                    TERMINAL_INTERFACE = True
+
+        if event.type == pygame.KEYUP: # detects if the user has released a keypress
+            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT: # whenever an arrow key is released
+                delta_x = 0 # stop the x changes of the character; prevent the character from moving indefinitely
+                delta_y = 0 # stop the y changes in the character; prevent the character from moving indefinitely
+
+    # resetting Jerry's position after he exists the side of the screen
+    if INDOOR == False:
+        if jerry_x >= SCREEN_SIZE - 40:
+            jerry_x = 10
+            scene += 1
+        elif jerry_x < 0:
+            jerry_x = SCREEN_SIZE * 0.95
+            scene -= 1
+    else:
+        if jerry_x_indoor >= SCREEN_SIZE - 100:
+            jerry_x_indoor = 20
+            scene += 1
+        elif jerry_x_indoor < 0:
+            jerry_x_indoor = SCREEN_SIZE * 0.7
+            scene -= 1
+
+    # ----- CANVAS START ----- #
+    # background rendering function (LAYER 4) (BOTTOM MOST LAYER)
+    scene_change()
+
+    # main character render
+    if INDOOR == False:
+        jerry_x += delta_x
+        jerry_y += delta_y
+        sprite(jerry_x, jerry_y, JERRY_RIGHT, JERRY_LEFT, character_direction)
+    else:
+        jerry_x_indoor += delta_x * 2
+        sprite(jerry_x_indoor, jerry_y_indoor, JERRY_RIGHT, JERRY_LEFT, character_direction)
+
+    # foreground scene (LAYER 1)
+    foreground()
+
+    # text / story screens (TOP MOST)
+    if INDOOR == False:
+        collision = detect_collide(1, jerry_x, office_detect_min, office_detect_max)
+
+
+    prompt()
+    computer_screen()
+    starting_screen(scene)
+    # ----- CANVAS END ----- #
+
+    # game update function
