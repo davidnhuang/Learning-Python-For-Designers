@@ -1,0 +1,103 @@
+# David Huang
+# Computer Science for Designers and Artists
+# Week 11
+# Alex Seropian
+# Version: testing v1
+# Nov 15 2017
+
+# ----- Imports -----
+import pygame
+
+pygame.init()
+
+# ----- CONSTANTS -----
+# game settings
+SCREEN_SIZE = 800 # screen pixel pygame will render
+GAME_DISPLAY = pygame.display.set_mode((SCREEN_SIZE,SCREEN_SIZE))
+GAME_EXIT = False
+scene = 0
+FULL_SCREEN_POS = (0,0)
+
+# game colors
+BLUE = (0, 0, 255)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+
+# game bg assets
+city_bg = '/Users/David/Documents/GitHub/Final_Project/assets/city_bg_2.png'
+city_street = '/Users/David/Documents/GitHub/Final_Project/assets/city_street.png'
+jerry_char = '/Users/David/Documents/GitHub/Final_Project/assets/jerry.png'
+
+# ----- Variables -----
+# game window caption
+pygame.display.set_caption('Testing 1')
+
+x = (SCREEN_SIZE * 0.45)
+y = (SCREEN_SIZE * 0.8)
+
+delta_x = 0
+delta_y = 0
+
+frame_left = SCREEN_SIZE
+frame_right = 0
+
+# ----- Functions -----
+def bg_render(GAME_DISPLAY, url): # renders the background programmatically
+    png_image = pygame.image.load(url)
+    GAME_DISPLAY.blit(png_image, FULL_SCREEN_POS)
+
+def jerry(x, y): # renders our character jerry, Hello! at x and y location
+    character_png = pygame.image.load(jerry_char)
+    GAME_DISPLAY.blit(character_png, (x, y))
+
+def scene_change(scene, x):
+    # todo - reset the frame so that after the character has exited out of the screen, Jerry(x,y) is reset to 0 position
+    # todo - reset the frame so that new frame positions are reset
+    # todo - this needs a lot of work
+    # todo - find a way to stop player movement if they reach a point / wall
+    if scene == 0: # todo - THIS CANNOT SIMPLY BE + OR -, it needs a more specific indicator as to what scene it is
+        bg_render(GAME_DISPLAY, city_bg)
+        bg_render(GAME_DISPLAY, city_street)
+    if x >= SCREEN_SIZE:
+        scene += 1
+        if scene == 1:
+            bg_render(GAME_DISPLAY, city_bg)
+    elif x < 0:
+        scene -= 1
+        if scene == -1:
+            bg_render(GAME_DISPLAY, city_street)
+
+# ----- Main Loop -----
+while not GAME_EXIT: # while the user has not closed the window
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT: # if the user clicks quit / red x, close the window
+            GAME_EXIT = True # game is closed
+
+        if event.type == pygame.KEYDOWN: # if there is any key being pressed
+            if event.key == pygame.K_LEFT: # if the key is left arrow
+                delta_x = -10 # move to the left
+            elif event.key == pygame.K_RIGHT: # if the key is right arrow
+                delta_x = 10 # move to the right
+            elif event.key == pygame.K_UP: # if the key is up arrow
+                delta_y = -10 # move up
+            elif event.key == pygame.K_DOWN: # if the key is down arrow
+                delta_y = 10 # move down
+
+        if event.type == pygame.KEYUP: # if the key is released
+            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                delta_x = 0 # stop the animation
+                delta_y = 0 # stop the animation
+
+    x += delta_x # add the change to the current x location
+    y += delta_y # add the change to the current y location
+
+    scene_change(scene, x)
+    if x >= SCREEN_SIZE:
+        x = 0
+    elif x <= 0:
+        x = SCREEN_SIZE - 10
+    jerry(x,y) # spawning main character at x and y location
+
+    pygame.display.flip()  # update the game after every event
