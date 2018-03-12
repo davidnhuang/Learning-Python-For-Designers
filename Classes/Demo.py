@@ -2,13 +2,16 @@
 # Learning Python: Class and Object Oriented Programs
 # Tutorial URL:https://jeffknupp.com/blog/2014/06/18/improve-your-python-python-classes-and-object-oriented-programming/
 
-class Customer(obj): # class that defines a customer
+# FUNCTIONS AND CLASSES
+class Customer(object): # class that defines a customer
     # a customer of ABC Bank with a checking account. Customers have the following attributes:
     # 1. Customers have a name: a string representing the customer's name
     # 2. Customers have a balance: a float tracking the current balance of the customer's account
 
     def __init__(self, name, balance=0.0): # initializing the Customer class
         # describing the customer
+        # for self, it's like saying "here's how you withdraw money from a Customer object, which is the name of the
+        # object itself."
         self.name = name # creates the name for the customer
         self.balance = balance # creates the `balance` for the customer
 
@@ -23,3 +26,5 @@ class Customer(obj): # class that defines a customer
         # returning a balance after `amount` is added
         self.balance += amount
         return self.balance
+
+# DECLARATIONS
