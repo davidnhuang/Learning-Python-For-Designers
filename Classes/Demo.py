@@ -27,4 +27,24 @@ class Customer(object): # class that defines a customer
         self.balance += amount
         return self.balance
 
-# DECLARATIONS
+class Car(object): # here we've created the class Cars
+    wheels = 4 # cars have 4 wheels
+    def __init__(self, make, model): # here we are describing the car
+        self.make = make # here we are describing the make
+        self.model = model # here we are describing the model of the car
+
+    @staticmethod # a static method removes methods need to have the self declaration
+    def car_gas_sound():
+        print ('Vroom!')
+
+    @classmethod
+    def motorcycle_wheel(cls):
+        return cls.wheels == 2
+
+mustang = Car('Ford', 'Mustang') # a Mustant is a Ford vehicle under the Mustang model
+
+#INHERITANCE
+#MAIN
+print (mustang.wheels)
+print (Car.wheels)
+print (mustang.car_gas_sound())
