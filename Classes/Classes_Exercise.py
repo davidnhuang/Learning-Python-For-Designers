@@ -3,6 +3,8 @@
 # Reverse String with Classes
 # 3 - 16 - 2018
 
+# resource: https://en.wikibooks.org/wiki/A_Beginner%27s_Python_Tutorial/Classes
+
 # Create a class that describes a dog
 
 class dog(): # creates the class dog, which produces a dog with the attribute color and name
