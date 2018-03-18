@@ -54,3 +54,9 @@ cow = mammal('cow','grass', 'domestic', 'is not')
 
 cow.description()
 cow.cow_noise()
+
+class life():
+
+    def __init__(self, name, photosynthetic, predatory, sexual_reproduction):
+        self.name = name
+        self.photosynthetic = photosynthetic
