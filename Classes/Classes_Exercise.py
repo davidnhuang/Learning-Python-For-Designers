@@ -31,3 +31,26 @@ tony_the_bulldog.howl() # howls
 # A clear distinction is that a class is NOT a function; it is a series of methods that help define an object.
 # A dog has four legs, a color, and can bark and howl. This means that the methods within the class would define those.
 # Think of class as the object or thing, and the method as parts of the thing or characteristics of that thing
+
+# Create a class that describes a mammal - define a cow, a dog, and a lion
+class mammal():
+
+    def __init__(self, animal_name, food, wild, animal_type):
+        self.animal_name = animal_name
+        self.food = food
+        self.wild = wild
+        self.animal_type = animal_type
+
+    def description(self):
+        print(self.animal_name, 'eats', self.food, 'and is', self.wild, 'and', self.animal_type, 'a hunter')
+
+    def cow_noise(self):
+        if self.animal_name == 'cow':
+            print ('mooo')
+        else:
+            print ('dunno')
+
+cow = mammal('cow','grass', 'domestic', 'is not')
+
+cow.description()
+cow.cow_noise()
