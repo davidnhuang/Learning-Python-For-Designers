@@ -15,8 +15,8 @@ import time
 Team_Dataset = ['Team NiP', 'None', 'Team Fnatic', 'None', 0, 0, 5, 5, 48.2, 48.1, 55, 50, 33, 35]
 
 # Game data
-# Dataset format: [total rounds played, bomb planted, bomb defused, bomb detonated]
-Game_Data = [0, False, False, False]
+# Dataset format: [total rounds played, bomb planted, bomb defused, bomb detonated, game over]
+Game_Data = [0, False, False, False, False, False]
 
 # VARIABLES
 
@@ -32,8 +32,8 @@ class Game():
     def __init__(self, Game_Data):
         self.Game_Data = Game_Data
 
-    def ct_win_msg(self):
-        
+    def game_end(self):
+
 # FUNCTIONS
 
 # MAIN
