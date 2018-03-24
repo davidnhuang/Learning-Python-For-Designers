@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Command-Line-Repo/.idea/Command-Line-Repo.iml" filepath="$PROJECT_DIR$/../Command-Line-Repo/.idea/Command-Line-Repo.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/Learning-Python-For-Designers.iml" filepath="$PROJECT_DIR$/.idea/Learning-Python-For-Designers.iml" />
     </modules>
   </component>

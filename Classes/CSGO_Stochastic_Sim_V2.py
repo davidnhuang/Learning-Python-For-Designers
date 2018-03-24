@@ -20,8 +20,15 @@ Game_Data = [0, False, False, False, False, False]
 
 # VARIABLES
 
-
 # CLASSES
+class game_mechanism():
+
+    def __init__(self, Game_Data, Team_Data):
+        self.Game_Data = Game_Data
+        self.Team_Data = Team_Data
+
+    def roll_side(self):
+
 class game_outcome(): # this class handles all the possible endings for the game, which are ties, team A win, team B win
 
     def __init__(self, Game_Data, Team_Data): # using Game_Data dataset to handle game outcomes
