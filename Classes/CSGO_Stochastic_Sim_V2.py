@@ -18,8 +18,6 @@ Team_Data = ['Team NiP', 'None', 'Team Fnatic', 'None', 0, 0, 5, 5, 48.2, 48.1, 
 # Dataset format: [total rounds played, bomb planted, bomb defused, bomb detonated, game over]
 Game_Data = [0, False, False, False, False, False]
 
-# VARIABLES
-
 # CLASSES
 class game_mechanism():
 
@@ -27,7 +25,21 @@ class game_mechanism():
         self.Game_Data = Game_Data
         self.Team_Data = Team_Data
 
-    def roll_side(self):
+    def ct_side(self): # this function rolls for which team gets to go first as ct side
+        teams_roll = [self.Team_Data[0], self.Team_Data[2]] # inputs team A side and team B side a roster
+        ct_side = teams_roll.pop(random.randint(0,1)) # the way the roll works is by taking out one of the randomly
+                                                      # selected teams in the list, which would be labeled as the ct
+        t_side = teams_roll[0] # label the remaining team as the t
+        sides_rolled = [ct_side, t_side] # arrange the selected sided into a list
+        if sides_rolled[0] == self.Team_Data[0]: # if team A is selected as the ct
+            self.Team_Data[1] = 'Counter Terrorists' # input Counter Terrorist label
+            self.Team_Data[3] = 'Terrorists' # input Terrorist label
+            return self.Team_Data
+        else:
+            self.Team_Data[1] = 'Terrorists'
+            self.Team_Data[3] = 'Counter Terrorists'
+            return self.Team_Data
+
 
 class game_outcome(): # this class handles all the possible endings for the game, which are ties, team A win, team B win
 
@@ -41,19 +53,16 @@ class game_outcome(): # this class handles all the possible endings for the game
             print ('Game Tie') # declare a tie
 
     def game_winner(self): # this method determines whether there is a victor in the game and print their victory prompt
-        if self.Team_Data[4] == 16: # A team wins the game if they reach 16 rounds won
-            print (self.Team_Data[0], 'clinched the game with 16 rounds won')
-        elif self.Team_Data[5] == 16:
-            print (self.Team_Data[2], 'clinched the game with 16 rounds won')
-
-
-# FUNCTIONS
+        if self.Team_Data[4] == 16: # A team wins the game if they reach 16 rounds first
+            print (self.Team_Data[0], 'clinched the game with 16 rounds won') # print team A win message
+        elif self.Team_Data[5] == 16: # B team wins the game if they reach 16 rounds first
+            print (self.Team_Data[2], 'clinched the game with 16 rounds won') # print team B win message
 
 # MAIN
 outcome = game_outcome(Game_Data, Team_Data)
 
-Team_Data[4] = 16
-Team_Data[5] = 10
+tournament = game_mechanism(Game_Data, Team_Data)
+tournament.ct_side()
 
 outcome.game_tie() # declares a tie
 outcome.game_winner() # declares a winner
