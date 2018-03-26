@@ -18,14 +18,19 @@ Team_Data = ['Team NiP', 'None', 'Team Fnatic', 'None', 0, 0, 5, 5, 48.2, 48.1, 
 # Dataset format: [total rounds played, bomb planted, bomb defused, bomb detonated, game over]
 Game_Data = [0, False, False, False, False, False]
 
+# VARIABLES
+# Game parameters
+
 # CLASSES
 class game_mechanism():
 
-    def __init__(self, Game_Data, Team_Data):
+    # initializes game mechanics and tournament mechanics
+    def __init__(self, Game_Data, Team_Data): # imports data sets Game_Data and Team_Data
         self.Game_Data = Game_Data
         self.Team_Data = Team_Data
 
-    def ct_side(self): # this function rolls for which team gets to go first as ct side
+    # Tournament Rules
+    def rolling_sides(self): # this function rolls for which team gets to go first as ct side
         teams_roll = [self.Team_Data[0], self.Team_Data[2]] # inputs team A side and team B side a roster
         ct_side = teams_roll.pop(random.randint(0,1)) # the way the roll works is by taking out one of the randomly
                                                       # selected teams in the list, which would be labeled as the ct
@@ -35,18 +40,21 @@ class game_mechanism():
             self.Team_Data[1] = 'Counter Terrorists' # input Counter Terrorist label
             self.Team_Data[3] = 'Terrorists' # input Terrorist label
             return self.Team_Data
-        else:
-            self.Team_Data[1] = 'Terrorists'
-            self.Team_Data[3] = 'Counter Terrorists'
+        else: # if team B is rolled as ct
+            self.Team_Data[1] = 'Terrorists' # input terrorist label for team A
+            self.Team_Data[3] = 'Counter Terrorists' # input terrorist label for team B
             return self.Team_Data
 
+    # Terminal Announcement
+    def team_sides_announcement(self):
+        print ('=' * 55)
+        print (self.Team_Data[0], ' will play as ', self.Team_Data[1])
+        print (self.Team_Data[2], ' will play as ', self.Team_Data[3])
+        print ('=' * 55)
 
-class game_outcome(): # this class handles all the possible endings for the game, which are ties, team A win, team B win
+    # Match mechanics
 
-    def __init__(self, Game_Data, Team_Data): # using Game_Data dataset to handle game outcomes
-        self.Game_Data = Game_Data # this allows the class to import the datasets from Game Data
-        self.Team_Data = Team_Data # this allows the class to import the datasets from Team Data
-
+    # Game Finality
     def game_tie(self): # this method determines whether the game is a tie or not
         # A tie happens when the max amount of rounds (30) is played and both teams reach 15 round won
         if self.Team_Data[4] == 15 and self.Team_Data[5] == 15 and self.Game_Data[0] == 30:
@@ -58,11 +66,13 @@ class game_outcome(): # this class handles all the possible endings for the game
         elif self.Team_Data[5] == 16: # B team wins the game if they reach 16 rounds first
             print (self.Team_Data[2], 'clinched the game with 16 rounds won') # print team B win message
 
+
 # MAIN
-outcome = game_outcome(Game_Data, Team_Data)
-
+# initialize game
 tournament = game_mechanism(Game_Data, Team_Data)
-tournament.ct_side()
-
-outcome.game_tie() # declares a tie
-outcome.game_winner() # declares a winner
+# first half
+tournament.rolling_sides()
+tournament.team_sides_announcement()
+# game ending
+tournament.game_tie() # declares a tie
+tournament.game_winner() # declares a winner
