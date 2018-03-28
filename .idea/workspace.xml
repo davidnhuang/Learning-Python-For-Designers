@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fa434a08-27bc-4670-8390-b6d40459fa0c" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py" afterPath="$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -13,20 +12,38 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="CSGO_Stochastic_Sim_V2.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="78">
-              <caret line="58" column="49" lean-forward="false" selection-start-line="58" selection-start-column="49" selection-end-line="58" selection-end-column="49" />
-              <folding>
-                <element signature="e#91#104#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.5">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="CSGO_Stochastic_Simulation.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/Midterm/CSGO_Stochastic_Simulation.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="-1155">
+                  <caret line="50" column="0" lean-forward="true" selection-start-line="48" selection-start-column="7" selection-end-line="50" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file leaf-file-name="CSGO_Stochastic_Sim_V2.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="579">
+                  <caret line="49" column="0" lean-forward="true" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#91#104#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -40,10 +57,12 @@
     <findStrings>
       <find>t</find>
       <find>team_B_t_side</find>
+      <find>counter_t_side</find>
     </findStrings>
     <replaceStrings>
       <replace />
       <replace>team_B_t_assign</replace>
+      <replace>ct_side</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -85,24 +104,24 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="Learning-Python-For-Designers" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Command-Line-Repo" type="462c0819:PsiDirectoryNode" />
+              <item name="Learning-Python-For-Designers" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Learning-Python-For-Designers" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Command-Line-Repo" type="462c0819:PsiDirectoryNode" />
-              <item name="cmd-line-guides" type="462c0819:PsiDirectoryNode" />
+              <item name="Learning-Python-For-Designers" type="462c0819:PsiDirectoryNode" />
+              <item name="Midterm" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -238,7 +257,7 @@
     <frame x="0" y="22" width="1280" height="778" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.153125" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.153125" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329429" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -268,6 +287,16 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#91#104#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -584,7 +613,6 @@
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="19">
             <caret line="3" column="2" lean-forward="true" selection-start-line="3" selection-start-column="2" selection-end-line="3" selection-end-column="2" />
-            <folding />
           </first_editor>
           <second_editor />
         </state>
@@ -595,7 +623,6 @@
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="228">
             <caret line="12" column="0" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-            <folding />
           </first_editor>
           <second_editor />
         </state>
@@ -603,16 +630,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Midterm/CSGO_Stochastic_Simulation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="893">
-          <caret line="48" column="38" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+        <state relative-caret-position="-1155">
+          <caret line="50" column="0" lean-forward="true" selection-start-line="48" selection-start-column="7" selection-end-line="50" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="78">
-          <caret line="58" column="49" lean-forward="false" selection-start-line="58" selection-start-column="49" selection-end-line="58" selection-end-column="49" />
+        <state relative-caret-position="579">
+          <caret line="49" column="0" lean-forward="true" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
           <folding>
             <element signature="e#91#104#0" expanded="true" />
           </folding>

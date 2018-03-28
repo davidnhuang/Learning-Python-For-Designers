@@ -11,28 +11,42 @@ import time
 # Team Data
 # Dataset format: [team A name, team A side, team B name, team B side, team A score, team B score, team A alive player
 # count, team B alive player count, team A ct elimination rate, team B ct elimination rate, team A bomb plant success
-# rate, team B bomb plant success rate, team A bomb diffuse success rate, team B bomb deffuse success rate]
-Team_Data = ['Team NiP', 'None', 'Team Fnatic', 'None', 0, 0, 5, 5, 48.2, 48.1, 55, 50, 33, 35]
+# rate, team B bomb plant success rate, team A bomb diffuse success rate, team B bomb deffuse success rate, ct and t
+# exchange survival percentage]
+Team_Data = ['Team NiP', 'None', 'Team Fnatic', 'None', 0, 0, 5, 5, 48.2, 48.1, 55, 50, 33, 35, 6]
 
 # Game data
-# Dataset format: [total rounds played, bomb planted, bomb defused, bomb detonated, game over]
-Game_Data = [0, False, False, False, False, False]
+# Dataset format: [total rounds played, halves played, bomb planted, bomb defused, bomb detonated, game over]
+Game_Data = [0, 0, False, False, False, False, False]
 
 # VARIABLES
 # Game parameters
-counter_terrorist_side = 'Counter Terrorists'
-terrorist_side = 'Terrorists'
+ct_side = 'Counter Terrorists'
+t_side = 'Terrorists'
+
+ct_win_msg = 'Counter Terrorists Win'
+t_win_msg = 'Terrorists Win'
+
+victory_round = 16 # teams need to accumulate 16 rounds won in order to win the game
+max_total_round = 30 # teams only have 30 rounds to play
+half_time_round = max_total_round/2
+
+Gun_List = ['M4A1-S', 'M4A4', 'AWP', 'SSG-08', 'USP-S', 'CZ75-Auto', 'Desert Eagle', 'Knife', 'AK-47', 'Galil', 'AWP',
+        'SSG-08', 'Glock-18', 'Tech-9', 'Desert Eagle'] # are we rushing in? or are we going sneaky-beaky like?
 
 # FUNCTION
 def team_A_t_assign(): # assign team B as terrorists
-    Team_Data[1] = terrorist_side  # input terrorist label for team A
-    Team_Data[3] = counter_terrorist_side  # input terrorist label for team B
+    Team_Data[1] = t_side  # input terrorist label for team A
+    Team_Data[3] = ct_side  # input terrorist label for team B
     return Team_Data
 
 def team_B_t_assign(): # assign team B as terrorists
-    Team_Data[1] = counter_terrorist_side  # input Counter Terrorist label
-    Team_Data[3] = terrorist_side  # input Terrorist label
+    Team_Data[1] = ct_side  # input Counter Terrorist label
+    Team_Data[3] = t_side  # input Terrorist label
     return Team_Data
+
+def round_reset():
+    if Team_Data[6] == 0 or Game_Data[3] == True:
 
 # CLASSES
 class game_mechanism():
@@ -46,18 +60,19 @@ class game_mechanism():
     def rolling_sides(self): # rolls for which team gets to go first as ct side
         if Game_Data[0] == 0: # rolls only happen at the beginning of the game
             teams_roll = [self.Team_Data[0], self.Team_Data[2]] # inputs team A side and team B side a roster
-            ct_side = teams_roll.pop(random.randint(0,1)) # the way the roll works is by taking out one of the randomly
-                                                          # selected teams in the list, which would be labeled as the ct
-            t_side = teams_roll[0] # label the remaining team as the t
-            sides_rolled = [ct_side, t_side] # arrange the selected sided into a list
+            ct_side_rolled = teams_roll.pop(random.randint(0,1)) # the way the roll works is by taking out one of the
+                                                                 # randomly selected teams in the list, which would be
+                                                                 # labeled as the ct
+            t_side_rolled = teams_roll[0] # label the remaining team as the t
+            sides_rolled = [ct_side_rolled, t_side_rolled] # arrange the selected sided into a list
             if sides_rolled[0] == self.Team_Data[0]: # if team A is selected as the ct
-                team_B_t_assign()
+                team_B_t_assign() # assign team B as the terrorists
             else: # if team B is rolled as ct
-                team_A_t_assign()
+                team_A_t_assign() # assign team A as the terrorists
 
-    def switching_sides(self):
+    def switching_sides(self): # method that switches the team sides
         if Game_Data[0] == 15: # switching team sides after half-time
-            if self.Team_Data[1] == counter_terrorist_side: # if team A is ct side
+            if self.Team_Data[1] == ct_side: # if team A is ct side
                 team_A_t_assign()
             else: # if team B is ct side
                 team_B_t_assign()
@@ -70,6 +85,8 @@ class game_mechanism():
         if Game_Data[0] == 0 or Game_Data[0] == 15: # either at half time or beginning of the game
             print (self.Team_Data[0], ' will play as ', self.Team_Data[1]) # announce sides
             print (self.Team_Data[2], ' will play as ', self.Team_Data[3])
+        # print t win message
+        # print ct win message
         print ('=' * 55) # decoration
 
     # Game Finality
@@ -86,12 +103,12 @@ class game_mechanism():
 
 # MAIN
 # initialize game
-tournament = game_mechanism(Game_Data, Team_Data)
+NIP_VS_FNATIC = game_mechanism(Game_Data, Team_Data)
 
 # first half
-tournament.rolling_sides()
-tournament.team_sides_announcement()
+NIP_VS_FNATIC.rolling_sides()
+NIP_VS_FNATIC.team_sides_announcement()
 
 # game ending
-tournament.game_tie() # declares a tie
-tournament.game_winner() # declares a winner
+NIP_VS_FNATIC.game_tie() # declares a tie
+NIP_VS_FNATIC.game_winner() # declares a winner
