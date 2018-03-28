@@ -45,9 +45,6 @@ def team_B_t_assign(): # assign team B as terrorists
     Team_Data[3] = t_side  # input Terrorist label
     return Team_Data
 
-def round_reset():
-    if Team_Data[6] == 0 or Game_Data[3] == True:
-
 # CLASSES
 class game_mechanism():
 
@@ -76,6 +73,22 @@ class game_mechanism():
                 team_A_t_assign()
             else: # if team B is ct side
                 team_B_t_assign()
+
+    # TODO - This needs double checking - Problem: Redundant
+    def team_revive(self): # revives both teams after a round is over
+        if self.Team_Data[6] == 0 or self.Team_Data[7] or self.Game_Data[4] == True or self.Game_Data[5] == True:
+        # if a round is over (if either side is eliminated, or if ct defuses, or if t detonates)
+            self.Team_Data[6] = 5 # revive team A
+            self.Team_Data[7] = 5 # revive team B
+            return self.Team_Data
+
+    def objective_reset(self):
+        if self.Team_Data[6] == 0 or self.Team_Data[7] or self.Game_Data[4] == True or self.Game_Data[5] == True:
+            # if a round is over (if either side is eliminated, or if ct defuses, or if t detonates)
+            self.team_revive() # revive both teams
+            self.Game_Data[4] = False # reset bomb to not defused
+            self.Game_Data[5] = False # reset bomb to not detonated
+            return self.Game_Data
 
     # Terminal Announcement
     def team_sides_announcement(self): # this function handles all announcement prompts
