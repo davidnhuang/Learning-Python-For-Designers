@@ -6,6 +6,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Command-Line-Repo" />
     <orderEntry type="module" module-name="Atlas" />
+    <orderEntry type="module" module-name="My-Chrome-Theme" />
   </component>
   <component name="TestRunnerService">
     <option name="PROJECT_TEST_RUNNER" value="Unittests" />
