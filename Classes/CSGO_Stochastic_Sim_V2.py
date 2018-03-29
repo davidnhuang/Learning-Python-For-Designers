@@ -84,8 +84,11 @@ class Game():
             return True # if any of the above conditions are met, the round is over
 
     def t_side_win(self):
+        # if the t side win by eliminating the ct side or detonating the bomb
         
+
     def ct_side_win(self):
+        # if the ct side win by eliminating the t side or defusing a planted bomb
 
     # Reset Methods
     def team_revive(self): # revives both teams after a round is over
