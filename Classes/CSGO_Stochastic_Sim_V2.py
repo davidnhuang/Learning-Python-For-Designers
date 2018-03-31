@@ -45,6 +45,9 @@ def team_B_t_assign(): # assign team B as terrorists
     Team_Data[3] = t_side  # input Terrorist label
     return Team_Data
 
+def round_victory(ct_side_team, t_side_team): # determines whether the ct sided team won
+    # determine if the the team is ct
+
 # CLASSES
 class Game():
 
@@ -83,13 +86,6 @@ class Game():
         if self.Team_Data[6] == 0 or self.Team_Data[7] == 0 or self.Game_Data[4] == True or self.Game_Data[5] == True:
             return True # if any of the above conditions are met, the round is over
 
-    def t_side_win(self):
-        # if the t side win by eliminating the ct side or detonating the bomb
-        
-
-    def ct_side_win(self):
-        # if the ct side win by eliminating the t side or defusing a planted bomb
-
     # Reset Methods
     def team_revive(self): # revives both teams after a round is over
         if self.Team_Data[6] == 0 or self.Team_Data[7] == 0:
@@ -122,7 +118,9 @@ class Game():
         # print t win message
         if self.round_over() == True:
             # did the T side win the round?
+
             # did the CT side win the round?
+
         # print ct win message
         print ('=' * 55) # decoration
 
