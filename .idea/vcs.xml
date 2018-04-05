@@ -2,8 +2,5 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/../Atlas" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/../Command-Line-Repo" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/../My-Chrome-Theme" vcs="Git" />
   </component>
 </project>

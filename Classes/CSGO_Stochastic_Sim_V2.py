@@ -16,8 +16,8 @@ import time
 Team_Data = ['Team NiP', 'None', 'Team Fnatic', 'None', 0, 0, 5, 5, 48.2, 48.1, 55, 50, 33, 35, 6]
 
 # Game data
-# Dataset format: [total rounds played, halves played, bomb planted, bomb defused, bomb detonated, game over]
-Game_Data = [0, 0, False, False, False, False, False]
+# Dataset format: [total rounds played, halves played, bomb planted, bomb defused, bomb detonated]
+Game_Data = [0, 0, False, False, False, False]
 
 # VARIABLES
 # Game parameters
@@ -83,17 +83,30 @@ class Game():
         if self.Team_Data[6] == 0 or self.Team_Data[7] == 0 or self.Game_Data[4] == True or self.Game_Data[5] == True:
             return True # if any of the above conditions are met, the round is over
 
-    def victory_determine(self):  # This method determines which team and which side is the victor
-        # returns the name of the team who won and
-        if self.Team_Data[6] == 0 or self.Team_Data[7] == 0 or self.Game_Data[4] == True:
-            if self.Team_Data[0] == t_side:
-                return [self.Team_Data[0], t_side]
-        # tests if the t-side won the round
-        # determines the team that is t-side
-        # returns the list
-        # tests if the ct-side won the round
-        # determines the team that is ct-side
-        # returns the list
+    def round_victor(self):  # This method determines which team and which side is the victor
+        # A team can only win based on the following circumstances
+            # 1. Time runs out and T-side didn't plant the bomb (not included because we do not have a timed component yet)
+            # 2. If team A eliminates all members of team B
+            # 3. If team B eliminates all members of team A
+            # 4. If t side plants the bomb and detonates it
+            # 5. If ct side defuses a planted bomb
+        # team elimination
+        if self.Team_Data[6] == 0: # if Team A is eliminated
+            return self.Team_Data[2] # the winner of the round goes to Team B
+        elif self.Team_Data[7] == 0: # if Team B is eliminated
+            return self.Team_Data[0] # the winner of the round
+        # bomb detonation
+        elif self.Game_Data[5] == True: # if the bomb is detonated
+            if self.Team_Data[1] == t_side: # if team A is the t side
+                return self.Team_Data[0] # team A wins the round
+            else:
+                return self.Team_Data[2] # team B wins the round
+        # bomb defused
+        elif self.Game_Data[4] == True: # if bomb has been defused
+            if self.Team_Data[1] == ct_side: # if team A is ct
+                return self.Team_Data[0] # team A wins
+            else:
+                return self.Team_Data[2] # team B wins
 
     # Reset Methods
     def team_revive(self): # revives both teams after a round is over
@@ -106,7 +119,6 @@ class Game():
     def objective_reset(self):
         if self.Game_Data[4] == True or self.Game_Data[5] == True:
             # if a round is over (if either side is eliminated, or if ct defuses, or if t detonates)
-            self.team_revive() # revive both teams
             self.Game_Data[4] = False # reset bomb to not defused
             self.Game_Data[5] = False # reset bomb to not detonated
             return self.Game_Data
