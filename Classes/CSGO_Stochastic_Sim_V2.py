@@ -91,22 +91,26 @@ class Game():
             # 4. If t side plants the bomb and detonates it
             # 5. If ct side defuses a planted bomb
         # team elimination
-        if self.Team_Data[6] == 0: # if Team A is eliminated
-            return self.Team_Data[2] # the winner of the round goes to Team B
-        elif self.Team_Data[7] == 0: # if Team B is eliminated
-            return self.Team_Data[0] # the winner of the round
-        # bomb detonation
-        elif self.Game_Data[5] == True: # if the bomb is detonated
-            if self.Team_Data[1] == t_side: # if team A is the t side
-                return self.Team_Data[0] # team A wins the round
-            else:
-                return self.Team_Data[2] # team B wins the round
-        # bomb defused
-        elif self.Game_Data[4] == True: # if bomb has been defused
-            if self.Team_Data[1] == ct_side: # if team A is ct
-                return self.Team_Data[0] # team A wins
-            else:
-                return self.Team_Data[2] # team B wins
+        if self.round_over() == True:
+            if self.Team_Data[6] == 0: # if Team A is eliminated
+                return self.Team_Data[2] # the winner of the round goes to Team B
+            elif self.Team_Data[7] == 0: # if Team B is eliminated
+                return self.Team_Data[0] # the winner of the round
+            # bomb detonation
+            elif self.Game_Data[5] == True: # if the bomb is detonated
+                if self.Team_Data[1] == t_side: # if team A is the t side
+                    return self.Team_Data[0] # team A wins the round
+                else:
+                    return self.Team_Data[2] # team B wins the round
+            # bomb defused
+            elif self.Game_Data[4] == True: # if bomb has been defused
+                if self.Team_Data[1] == ct_side: # if team A is ct
+                    return self.Team_Data[0] # team A wins
+                else:
+                    return self.Team_Data[2] # team B wins
+
+    def ct_side_wins(self):
+        return 0
 
     # Reset Methods
     def team_revive(self): # revives both teams after a round is over
@@ -133,11 +137,9 @@ class Game():
         print ('=' * 55) # decoration
         if Game_Data[0] == 15: # at half time
             print ('Half time, switching sides...') # print switching side prompt
-        if Game_Data[0] == 0 or Game_Data[0] == 15: # either at half time or beginning of the game
+        elif Game_Data[0] == 0 or Game_Data[0] == 15: # either at half time or beginning of the game
             print (self.Team_Data[0], ' will play as ', self.Team_Data[1]) # announce sides
             print (self.Team_Data[2], ' will play as ', self.Team_Data[3])
-        # print t win message
-        # print ct win message
         print ('=' * 55) # decoration
 
     # Scoring method
@@ -152,6 +154,12 @@ class Game():
             print (self.Team_Data[0], 'clinched the game with 16 rounds won') # print team A win message
         elif self.Team_Data[5] == 16: # B team wins the game if they reach 16 rounds first
             print (self.Team_Data[2], 'clinched the game with 16 rounds won') # print team B win message
+
+    def score_keeper(self):
+        if self.round_victor() == self.Team_Data[0]:
+            if self.ct_side_wins() == True:
+                
+
 
 # MAIN
 # initialize game
