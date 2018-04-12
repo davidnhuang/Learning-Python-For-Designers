@@ -46,7 +46,7 @@ def team_B_t_assign(): # assign team B as terrorists
     return Team_Data
 
 # CLASSES
-class Game():
+class Game_Init():
 
     # initializes game mechanics and tournament mechanics
     def __init__(self, Game_Data, Team_Data): # imports data sets Game_Data and Team_Data
@@ -74,75 +74,6 @@ class Game():
             else: # if team B is ct side
                 team_B_t_assign()
 
-    # Deterministic Methods
-    def round_over(self): # method checking if the round is over
-        # a round concludes if the following happens:
-        # 1. either team reaches 0 players alive
-        # 2. bomb has been successfully detonated
-        # 3. bomb has been successfully defused
-        if self.Team_Data[6] == 0 or self.Team_Data[7] == 0 or self.Game_Data[4] == True or self.Game_Data[5] == True:
-            return True # if any of the above conditions are met, the round is over
-
-    def round_victor(self):  # This method determines which team and which side is the victor
-        # A team can only win based on the following circumstances
-            # 1. Time runs out and T-side didn't plant the bomb (not included because we do not have a timed component yet)
-            # 2. If team A eliminates all members of team B
-            # 3. If team B eliminates all members of team A
-            # 4. If t side plants the bomb and detonates it
-            # 5. If ct side defuses a planted bomb
-        # team elimination
-        if self.round_over() == True:
-            if self.Team_Data[6] == 0: # if Team A is eliminated
-                return self.Team_Data[2] # the winner of the round goes to Team B
-            elif self.Team_Data[7] == 0: # if Team B is eliminated
-                return self.Team_Data[0] # the winner of the round
-            # bomb detonation
-            elif self.Game_Data[5] == True: # if the bomb is detonated
-                if self.Team_Data[1] == t_side: # if team A is the t side
-                    return self.Team_Data[0] # team A wins the round
-                else:
-                    return self.Team_Data[2] # team B wins the round
-            # bomb defused
-            elif self.Game_Data[4] == True: # if bomb has been defused
-                if self.Team_Data[1] == ct_side: # if team A is ct
-                    return self.Team_Data[0] # team A wins
-                else:
-                    return self.Team_Data[2] # team B wins
-
-    def ct_side_wins(self):
-        return 0
-
-    # Reset Methods
-    def team_revive(self): # revives both teams after a round is over
-        if self.Team_Data[6] == 0 or self.Team_Data[7] == 0:
-        # if a round is over (if either side is eliminated, or if ct defuses, or if t detonates)
-            self.Team_Data[6] = 5 # revive team A
-            self.Team_Data[7] = 5 # revive team B
-            return self.Team_Data
-
-    def objective_reset(self):
-        if self.Game_Data[4] == True or self.Game_Data[5] == True:
-            # if a round is over (if either side is eliminated, or if ct defuses, or if t detonates)
-            self.Game_Data[4] = False # reset bomb to not defused
-            self.Game_Data[5] = False # reset bomb to not detonated
-            return self.Game_Data
-
-    def round_reset(self): # resets the round after a team wins it
-        if self.round_over() == True: # if a round concludes
-            self.team_revive() # revive both teams for the next round
-            self.objective_reset() # reset objectives for the next round
-
-    # Terminal Announcement
-    def team_sides_announcement(self): # this function handles all announcement prompts
-        print ('=' * 55) # decoration
-        if Game_Data[0] == 15: # at half time
-            print ('Half time, switching sides...') # print switching side prompt
-        elif Game_Data[0] == 0 or Game_Data[0] == 15: # either at half time or beginning of the game
-            print (self.Team_Data[0], ' will play as ', self.Team_Data[1]) # announce sides
-            print (self.Team_Data[2], ' will play as ', self.Team_Data[3])
-        print ('=' * 55) # decoration
-
-    # Scoring method
     # Game Finality
     def game_tie(self): # this method determines whether the game is a tie or not
         # A tie happens when the max amount of rounds (30) is played and both teams reach 15 round won
@@ -155,20 +86,31 @@ class Game():
         elif self.Team_Data[5] == 16: # B team wins the game if they reach 16 rounds first
             print (self.Team_Data[2], 'clinched the game with 16 rounds won') # print team B win message
 
-    def score_keeper(self):
-        if self.round_victor() == self.Team_Data[0]:
-            if self.ct_side_wins() == True:
-                
+    # Terminal Announcement
+    def team_sides_announcement(self): # this function handles all announcement prompts
+        print ('=' * 55) # decoration
+        if Game_Data[0] == 15: # at half time
+            print ('Half time, switching sides...') # print switching side prompt
+            print (self.Team_Data[0], ' will play as ', self.Team_Data[1]) # announce sides
+            print (self.Team_Data[2], ' will play as ', self.Team_Data[3])
+        elif Game_Data[0] == 0 or Game_Data[0] == 15: # either at half time or beginning of the game
+            print (self.Team_Data[0], ' will play as ', self.Team_Data[1]) # announce sides
+            print (self.Team_Data[2], ' will play as ', self.Team_Data[3])
+        self.game_tie()
+        self.game_winner()
+        print ('=' * 55) # decoration
+
 
 
 # MAIN
 # initialize game
-NIP_VS_FNATIC = Game(Game_Data, Team_Data)
+CSGO = Game_Init(Game_Data, Team_Data)
 
 # first half
-NIP_VS_FNATIC.rolling_sides()
-NIP_VS_FNATIC.team_sides_announcement()
+CSGO.rolling_sides()
+CSGO.team_sides_announcement()
 
-# game ending
-NIP_VS_FNATIC.game_tie() # declares a tie
-NIP_VS_FNATIC.game_winner() # declares a winner
+Game_Data[0] = 15
+
+Team_Data[4] = 16
+CSGO.team_sides_announcement()
