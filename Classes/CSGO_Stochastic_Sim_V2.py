@@ -1,12 +1,13 @@
-# David Huang
-# Learning Python for Designers
+# Daviarea=None Learning Python for Designers
 # CSGO Simulation V2
 # March 2018
 
-# Good Rule of Thumb - Before you write more code, test to see if it works first in the main loop
+# Don't write useless code
+# Before you write more code, test to see if it works first in the main loop
 
 ## IMPORTS
 import random
+import time
 
 ## CONSTANT
 ROUNDS_AVAILABLE = 30 # there are only 30 rounds in one game to play
@@ -20,7 +21,7 @@ T_SIDE = 'Terrorists'
 
 ## INITIALIZING DATA
 # Team A Basic Data
-team_A_name = 'Team NiP' # name for Team A
+team_A_ID = 'Team NiP' # name for Team A
 team_A_side = DEFAULT_TEAM_SIDE # what side team A is currently playing as, ct or t
 
 # Team A Default State
@@ -34,7 +35,7 @@ team_A_ct_defuse_rate = 33
 
 # Team B
 # Team B Basic Data
-team_B_name = 'Team Fnatic' # name for Team B
+team_B_ID = 'Team Fnatic' # name for Team B
 team_B_side = DEFAULT_TEAM_SIDE # what side team B is currently playing as, ct or t
 
 # Team B Default State
@@ -57,53 +58,89 @@ rounds_played_tally = 0 # tallies the total number of rounds played and conclude
 winner_team = None
 
 ## DATA SET
-TEAM_DATA = [team_A_name, team_B_name, # ID for teams
-             team_A_side, team_B_side, # Sides for teams
-             team_A_points, team_B_points, # points tally for both teams
-             team_A_players, team_B_players, # number of players alive on both teams
-             team_A_ct_elim_rate, team_B_ct_elim_rate, # elimination rates for both teams
-             team_A_t_plant_rate, team_B_t_plant_rate, # bomb planted rates for both teams
-             team_A_ct_defuse_rate, team_B_ct_defuse_rate, # bomb defused rates for both teams
-             ]
+TEAM_A_DATA = [team_A_ID, team_A_ct_elim_rate, team_A_t_plant_rate, team_A_ct_defuse_rate, team_A_side]
+TEAM_B_DATA = [team_B_ID, team_B_ct_elim_rate, team_B_t_plant_rate, team_B_ct_defuse_rate, team_B_side]
 
-GAME_DATA = [rounds_played_tally, # stores total number of rounds played by both sides
-             bomb_planted, # if bomb is planted by t side, return true
-             bomb_defused, # if bomb is planted and defused, return true
-             bomb_plant_limit] # if bomb has been planted once, it cannot be planted again
+GAME_METADATA = [rounds_played_tally,
+                 team_A_players, team_B_players,
+                 team_A_points, team_B_points,
+                 bomb_planted, # if bomb is planted by t side, return true
+                 bomb_defused, # if bomb is planted and defused, return true
+                 bomb_plant_limit] # if bomb has been planted once, it cannot be planted again
 
-TEMP_CT_DATA = [] # temporary memory to import data for CT based on selected CT side
-TEMP_T_DATA = [] # temporary memory to import data for T based on selected T side
+## DATA TAGS
+# Sides
+TEAM_A = 0
+TEAM_B = 1
 
-## MESSAGES
-msg_bomb_plant = 'Bomb has been planted!'
-msg_ct_victory = 'Counter terrorists win!'
-msg_t_victory = 'Terrorists win!'
+# Types
+TEAM_NAME = 0
+TEAM_CT_KD = 1
+TEAM_PLANT_RATE = 2
+TEAM_DEFUSE_RATE = 3
+TEAM_SIDE = 4
 
 ## CLASSES
 class SETUP:
 
-    def __init__(self, TEAM_DATA, GAME_DATA):
-        self.TEAM_DATA = TEAM_DATA
-        self.GAME_DATA = GAME_DATA
+    def __init__(self, TEAM_A_DATA, TEAM_B_DATA, GAME_METADATA):
+        self.TEAM_A_DATA = TEAM_A_DATA
+        self.TEAM_B_DATA = TEAM_B_DATA
+        self.GAME_DATA = GAME_METADATA
 
-    def deciding_sides(self):
-        rolling_teams = [TEAM_DATA[0],TEAM_DATA[1]]
-        ct_team_decided = rolling_teams.pop(random.randint(0,1))
-        t_team_decided = rolling_teams[0]
-        team_decided_roles = [ct_team_decided, t_team_decided]
-        return team_decided_roles
+    def call_data(self, SORTED_LIST, TEAM_SIDE, CALLED_DATA_TYPE):
+        called_data = SORTED_LIST[TEAM_SIDE][CALLED_DATA_TYPE]
+        print (called_data)
 
+    def rolling_sides(self):
+        if GAME_METADATA[0] == 0 or GAME_METADATA[0] == HALFTIME_ROUND:
+            # rolling for which team plays as ct first
+            rolling_teams = [TEAM_A_DATA[TEAM_NAME],TEAM_B_DATA[TEAM_NAME]]
+            rolled_ct_team = rolling_teams.pop(random.randint(0,1))
+            rolled_t_team = rolling_teams[0]
+            team_decided_roles = [rolled_ct_team, rolled_t_team]
+            # importing data based on deciding
+            if team_decided_roles[0] == TEAM_A_DATA[TEAM_NAME]:
+                TEAM_A_DATA[TEAM_SIDE] = CT_SIDE
+                TEAM_B_DATA[TEAM_SIDE] = T_SIDE
+                DATA_FORMATION = [TEAM_A_DATA, TEAM_B_DATA]
+                return DATA_FORMATION
+            else:
+                TEAM_A_DATA[TEAM_SIDE] = T_SIDE
+                TEAM_B_DATA[TEAM_SIDE] = CT_SIDE
+                DATA_FORMATION = [TEAM_B_DATA, TEAM_A_DATA]
+                return DATA_FORMATION
 
-class MECHANICS:
-
-    def __init__(self, TEAM_DATA, GAME_DATA):
-        self.TEAM_DATA = TEAM_DATA
-        self.GAME_DATA = GAME_DATA
-
-## MAIN
+    def game_over(self, GAME_METADATA):
+        if GAME_METADATA[0] <= ROUNDS_AVAILABLE:
+            if GAME_METADATA[3] == WINNING_ROUND or GAME_METADATA[4] == WINNING_ROUND:
+                return True
+            elif GAME_METADATA[3] == HALFTIME_ROUND and GAME_METADATA[4] == HALFTIME_ROUND:
+                return True
+        else:
+            return False
 
 ## TEST
+class TESTING:
+
+    def __init__(self, SORTED_TEAM_DATA, GAME_METADATA):
+        self.SORTED_TEAM_DATA = SORTED_TEAM_DATA
+        self.GAME_METADATA = GAME_METADATA
+
+    def basic_count(self, search_term, search_area):
+        search_count = 0
+        if search_area == search_term:
+            search_count += 1
+        print (search_count)
+
 # print test
-foo = SETUP(TEAM_DATA, GAME_DATA)
-foo.deciding_sides()
-print (foo.deciding_sides()[0])
+TEMP_NAME = SETUP(TEAM_A_DATA, TEAM_B_DATA, GAME_METADATA)
+TESTING = TESTING(TEMP_NAME, GAME_METADATA)
+
+## MAIN
+if TEMP_NAME.game_over(GAME_METADATA) == True:
+    GAME_METADATA[0]+= 1
+    print ('game happening')
+else:
+    print ('game over')
+    print (GAME_METADATA[0])
