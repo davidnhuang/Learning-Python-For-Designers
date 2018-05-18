@@ -13,17 +13,14 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.62057877">
+    <splitter split-orientation="horizontal" split-proportion="0.67282957">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="CSGO_Stochastic_Sim_V2.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="714">
-                  <caret line="146" lean-forward="true" selection-start-line="146" selection-end-line="146" />
-                  <folding>
-                    <element signature="e#197#210#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="341">
+                  <caret line="125" column="24" selection-start-line="125" selection-start-column="24" selection-end-line="125" selection-end-column="24" />
                 </state>
               </provider>
             </entry>
@@ -35,8 +32,8 @@
           <file leaf-file-name="CSGO_Stochastic_Sim_V2.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="705">
-                  <caret line="111" column="37" selection-start-line="111" selection-start-column="37" selection-end-line="111" selection-end-column="37" />
+                <state relative-caret-position="1560">
+                  <caret line="112" column="37" selection-start-line="112" selection-start-column="37" selection-end-line="112" selection-end-column="37" />
                   <folding>
                     <element signature="e#197#210#0" expanded="true" />
                   </folding>
@@ -47,7 +44,7 @@
           <file leaf-file-name="CSGO_Stochastic_Simulation.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/Midterm/CSGO_Stochastic_Simulation.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-2764">
+                <state relative-caret-position="-730">
                   <caret line="59" column="40" selection-start-line="59" selection-start-column="40" selection-end-line="59" selection-end-column="40" />
                 </state>
               </provider>
@@ -286,13 +283,13 @@
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13611111" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" weight="0.329602" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.2039801" />
       <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Python Console" order="7" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.2039801" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39925373" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -315,17 +312,28 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="2" />
+      <option name="time" value="3" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1665">
+          <caret line="111" column="37" selection-start-line="111" selection-start-column="37" selection-end-line="111" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Midterm/CSGO_Stochastic_Simulation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="870">
+          <caret line="59" column="40" selection-start-line="59" selection-start-column="40" selection-end-line="59" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1575">
           <caret line="105" selection-start-line="105" selection-end-line="105" />
-          <folding>
-            <element signature="e#197#210#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -505,27 +513,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="9" selection-start-line="8" selection-start-column="5" selection-end-line="8" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Test.py" />
     <entry file="file://$PROJECT_DIR$/Midterm/CSGO_Stochastic_Simulation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2764">
+        <state relative-caret-position="-730">
           <caret line="59" column="40" selection-start-line="59" selection-start-column="40" selection-end-line="59" selection-end-column="40" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="714">
-          <caret line="146" lean-forward="true" selection-start-line="146" selection-end-line="146" />
-          <folding>
-            <element signature="e#197#210#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="341">
+          <caret line="125" column="24" selection-start-line="125" selection-start-column="24" selection-end-line="125" selection-end-column="24" />
         </state>
       </provider>
     </entry>

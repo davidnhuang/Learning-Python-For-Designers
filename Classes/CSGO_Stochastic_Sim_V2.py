@@ -1,13 +1,15 @@
-# Daviarea=None Learning Python for Designers
+# David Huang
+# Learning Python for Designers
 # CSGO Simulation V2
-# March 2018
 
-# Don't write useless code
-# Before you write more code, test to see if it works first in the main loop
+# Rule of thumb
+    # Don't write useless code
+        # This includes variables and constants
+    # Don't repeat yourself
+    # Before you write more code, test to see if it works first in the main loop
 
 ## IMPORTS
 import random
-import time
 
 ## CONSTANT
 ROUNDS_AVAILABLE = 30 # there are only 30 rounds in one game to play
@@ -16,6 +18,7 @@ WINNING_ROUND = HALFTIME_ROUND+1 # team who wins 1 more than half the available 
 DEFAULT_PLAYER_COUNT = 5 # determines how many players are alive at the start of each round
 DEFAULT_TEAM_SCORE = 0 # determines score teams start with
 DEFAULT_TEAM_SIDE = None # starting sides for teams in the beginning
+STARTING_ROUND = 0
 CT_SIDE = 'Counter Terrorists'
 T_SIDE = 'Terrorists'
 
@@ -56,18 +59,23 @@ bomb_defused = False # at the start of each round, because bomb is not planted, 
 bomb_plant_limit = False # terrorists only have one chance to plant and detonate bomb; they can't plant twice
 rounds_played_tally = 0 # tallies the total number of rounds played and concluded
 winner_team = None
+bomb_detonated = False
 
 ## DATA SET
-TEAM_A_DATA = [team_A_ID, team_A_ct_elim_rate, team_A_t_plant_rate, team_A_ct_defuse_rate, team_A_side]
-TEAM_B_DATA = [team_B_ID, team_B_ct_elim_rate, team_B_t_plant_rate, team_B_ct_defuse_rate, team_B_side]
+TEAM_A_DATA = [team_A_ID, team_A_ct_elim_rate, team_A_t_plant_rate, team_A_ct_defuse_rate, team_A_side, team_A_players]
+TEAM_B_DATA = [team_B_ID, team_B_ct_elim_rate, team_B_t_plant_rate, team_B_ct_defuse_rate, team_B_side, team_B_players]
 
-GAME_METADATA = [rounds_played_tally,
-                 team_A_players, team_B_players,
-                 team_A_points, team_B_points,
-                 bomb_planted, # if bomb is planted by t side, return true
-                 bomb_defused, # if bomb is planted and defused, return true
-                 bomb_plant_limit] # if bomb has been planted once, it cannot be planted again
+GAME_DATA = [rounds_played_tally,
+             team_A_points, team_B_points,
+             bomb_planted, # if bomb is planted by t side, return true
+             bomb_defused, # if bomb is planted and defused, return true
+             bomb_plant_limit,
+             bomb_detonated] # if bomb has been planted once, it cannot be planted again
 
+## TEXT DECORATION
+TXT_SPACER = ' '
+TXT_RULE_LONG = '-'*50
+TXT_RULE_SHORT = '-'*25
 ## DATA TAGS
 # Sides
 TEAM_A = 0
@@ -79,27 +87,20 @@ TEAM_CT_KD = 1
 TEAM_PLANT_RATE = 2
 TEAM_DEFUSE_RATE = 3
 TEAM_SIDE = 4
+PLAYER_COUNT = 5
 
 ## CLASSES
-class SETUP:
+class GAME_INIT:
 
-    def __init__(self, TEAM_A_DATA, TEAM_B_DATA, GAME_METADATA):
-        self.TEAM_A_DATA = TEAM_A_DATA
-        self.TEAM_B_DATA = TEAM_B_DATA
-        self.GAME_DATA = GAME_METADATA
+    def __init__(self, GAME_DATA):
+        self.GAME_DATA = GAME_DATA
 
-    def call_data(self, SORTED_LIST, TEAM_SIDE, CALLED_DATA_TYPE):
-        called_data = SORTED_LIST[TEAM_SIDE][CALLED_DATA_TYPE]
-        print (called_data)
-
-    def rolling_sides(self):
-        if GAME_METADATA[0] == 0 or GAME_METADATA[0] == HALFTIME_ROUND:
-            # rolling for which team plays as ct first
+    def importing_data(self):
+        if GAME_DATA[0] == STARTING_ROUND or GAME_DATA[0] == HALFTIME_ROUND:
             rolling_teams = [TEAM_A_DATA[TEAM_NAME],TEAM_B_DATA[TEAM_NAME]]
             rolled_ct_team = rolling_teams.pop(random.randint(0,1))
             rolled_t_team = rolling_teams[0]
             team_decided_roles = [rolled_ct_team, rolled_t_team]
-            # importing data based on deciding
             if team_decided_roles[0] == TEAM_A_DATA[TEAM_NAME]:
                 TEAM_A_DATA[TEAM_SIDE] = CT_SIDE
                 TEAM_B_DATA[TEAM_SIDE] = T_SIDE
@@ -111,36 +112,35 @@ class SETUP:
                 DATA_FORMATION = [TEAM_B_DATA, TEAM_A_DATA]
                 return DATA_FORMATION
 
-    def game_over(self, GAME_METADATA):
-        if GAME_METADATA[0] <= ROUNDS_AVAILABLE:
-            if GAME_METADATA[3] == WINNING_ROUND or GAME_METADATA[4] == WINNING_ROUND:
+    def round_over(self):
+        # if ct is eliminated or t is eliminated
+        if self.importing_data()[TEAM_A][PLAYER_COUNT] == 0 or self.importing_data()[TEAM_B][PLAYER_COUNT] == 0 or self.GAME_DATA[4] == True or self.GAME_DATA[6] == True:
+            return True
+
+    def game_over(self):
+        if GAME_DATA[0] < ROUNDS_AVAILABLE and GAME_DATA[3] == WINNING_ROUND or GAME_DATA[4] == WINNING_ROUND:
                 return True
-            elif GAME_METADATA[3] == HALFTIME_ROUND and GAME_METADATA[4] == HALFTIME_ROUND:
-                return True
+        elif GAME_DATA[3] == HALFTIME_ROUND and GAME_DATA[4] == HALFTIME_ROUND:
+            return True
         else:
             return False
 
-## TEST
-class TESTING:
+    def message_display(self, decorator_1, msg_type_name, decorator_2):
+        print(TXT_SPACER)
+        print(decorator_1)
+        if msg_type_name == 'call round':
+            print (GAME_DATA[0], ' / ', ROUNDS_AVAILABLE)
+        else:
+            print ('CALL ERROR: Not an available message')
+        print(decorator_2)
+        print(TXT_SPACER)
 
-    def __init__(self, SORTED_TEAM_DATA, GAME_METADATA):
-        self.SORTED_TEAM_DATA = SORTED_TEAM_DATA
-        self.GAME_METADATA = GAME_METADATA
+## TESTING
+# Testing Initialization
+foo = GAME_INIT(GAME_DATA)
+foo.message_display(TXT_RULE_LONG, 'call round', TXT_RULE_LONG)
 
-    def basic_count(self, search_term, search_area):
-        search_count = 0
-        if search_area == search_term:
-            search_count += 1
-        print (search_count)
-
-# print test
-TEMP_NAME = SETUP(TEAM_A_DATA, TEAM_B_DATA, GAME_METADATA)
-TESTING = TESTING(TEMP_NAME, GAME_METADATA)
-
-## MAIN
-if TEMP_NAME.game_over(GAME_METADATA) == True:
-    GAME_METADATA[0]+= 1
-    print ('game happening')
-else:
-    print ('game over')
-    print (GAME_METADATA[0])
+# Testing Loop
+while foo.game_over() == True:
+    foo.importing_data()
+    foo.round_over()
