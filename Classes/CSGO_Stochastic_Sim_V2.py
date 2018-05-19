@@ -26,33 +26,26 @@ T_SIDE = 'Terrorists'
 # Team A Basic Data
 team_A_ID = 'Team NiP' # name for Team A
 team_A_side = DEFAULT_TEAM_SIDE # what side team A is currently playing as, ct or t
-
 # Team A Default State
 team_A_points = DEFAULT_TEAM_SCORE # team B score; defaults at 0
 team_A_players = DEFAULT_PLAYER_COUNT # number of players team A starts with
-
 # Team A Statistics
 team_A_ct_elim_rate = 48.2
 team_A_t_plant_rate = 55
 team_A_ct_defuse_rate = 33
-
 # Team B
 # Team B Basic Data
 team_B_ID = 'Team Fnatic' # name for Team B
 team_B_side = DEFAULT_TEAM_SIDE # what side team B is currently playing as, ct or t
-
 # Team B Default State
 team_B_points = DEFAULT_TEAM_SCORE # team B score; starts at 0
 team_B_players = DEFAULT_PLAYER_COUNT # number of players team B starts with
-
 # Team B Statistics
 team_B_ct_elim_rate = 48.1
 team_B_t_plant_rate = 53
 team_B_ct_defuse_rate = 32
-
 # Team Exchange Survival
 team_exchange_survival = 6 # percentage chance of both teams surviving a gun exchange
-
 # Game Progression Data
 bomb_planted = False # at the start of each round, bomb is always not planted
 bomb_defused = False # at the start of each round, because bomb is not planted, bomb is not defused
@@ -62,25 +55,28 @@ winner_team = None
 bomb_detonated = False
 
 ## DATA SET
-TEAM_A_DATA = [team_A_ID, team_A_ct_elim_rate, team_A_t_plant_rate, team_A_ct_defuse_rate, team_A_side, team_A_players]
-TEAM_B_DATA = [team_B_ID, team_B_ct_elim_rate, team_B_t_plant_rate, team_B_ct_defuse_rate, team_B_side, team_B_players]
-
+TEAM_A_DATA = [team_A_ID, team_A_ct_elim_rate,
+               team_A_t_plant_rate, team_A_ct_defuse_rate,
+               team_A_side, team_A_players]
+TEAM_B_DATA = [team_B_ID, team_B_ct_elim_rate,
+               team_B_t_plant_rate, team_B_ct_defuse_rate,
+               team_B_side, team_B_players]
 GAME_DATA = [rounds_played_tally,
              team_A_points, team_B_points,
-             bomb_planted, # if bomb is planted by t side, return true
-             bomb_defused, # if bomb is planted and defused, return true
+             bomb_planted,
+             bomb_defused,
              bomb_plant_limit,
-             bomb_detonated] # if bomb has been planted once, it cannot be planted again
+             bomb_detonated]
 
 ## TEXT DECORATION
 TXT_SPACER = ' '
 TXT_RULE_LONG = '-'*50
 TXT_RULE_SHORT = '-'*25
+
 ## DATA TAGS
 # Sides
 TEAM_A = 0
 TEAM_B = 1
-
 # Types
 TEAM_NAME = 0
 TEAM_CT_KD = 1
@@ -122,6 +118,9 @@ class GAME_INIT:
 
     def round_winner(self):
         # which team got a point - measure delta
+            # in order to do this, needs a past version
+            # then compare with the present version
+            # if the version has a +1, then pass parameter
         # pass team name with delta to as round winner
         return 0
 
@@ -159,26 +158,20 @@ class GAME_INIT:
             print ('CALL ERROR: Not an available message type')
         print(TXT_SPACER)
 
+class GAME_MECH:
+
+    def __init__(self):
+        self.self = None
+
 ## TESTING
 # Testing Initialization
 TEST = GAME_INIT(GAME_DATA)
 test_imported_data = TEST.importing_data()
-
 # Singular Test
 TEST.message_display('call round', test_imported_data)
 TEST.message_display('call team info', test_imported_data)
-
-print(test_imported_data)
-test_imported_data[TEAM_A][PLAYER_COUNT] -= 2
-TEST.message_display('spacer', test_imported_data)
-print(test_imported_data)
-TEST.message_display('spacer', test_imported_data)
-test_imported_data = TEST.team_reset(test_imported_data)
-print(test_imported_data)
-
 # Testing Loop
-__OFF__ = True
-while TEST.game_over() == __OFF__:
-    print ('hi')
+OFF = True
+while TEST.game_over() == OFF:
     GAME_DATA = TEST.round_environment_reset()
     test_imported_data = TEST.team_reset(test_imported_data)
