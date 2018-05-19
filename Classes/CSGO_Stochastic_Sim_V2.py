@@ -112,11 +112,6 @@ class GAME_INIT:
                 DATA_FORMATION = [TEAM_B_DATA, TEAM_A_DATA]
                 return DATA_FORMATION
 
-    def round_over(self):
-        # if ct is eliminated or t is eliminated
-        if self.importing_data()[TEAM_A][PLAYER_COUNT] == 0 or self.importing_data()[TEAM_B][PLAYER_COUNT] == 0 or self.GAME_DATA[4] == True or self.GAME_DATA[6] == True:
-            return True
-
     def game_over(self):
         if GAME_DATA[0] < ROUNDS_AVAILABLE and GAME_DATA[3] == WINNING_ROUND or GAME_DATA[4] == WINNING_ROUND:
                 return True
@@ -125,22 +120,65 @@ class GAME_INIT:
         else:
             return False
 
-    def message_display(self, decorator_1, msg_type_name, decorator_2):
+    def round_winner(self):
+        # which team got a point - measure delta
+        # pass team name with delta to as round winner
+        return 0
+
+    def round_environment_reset(self):
+        GAME_DATA[0] += 1
+        GAME_DATA[3] = False
+        GAME_DATA[4] = False
+        GAME_DATA[5] = 0
+        GAME_DATA[6] = False
+        return GAME_DATA
+
+    def team_reset(self, imported_data):
+        imported_data[TEAM_A][PLAYER_COUNT] = DEFAULT_PLAYER_COUNT
+        imported_data[TEAM_B][PLAYER_COUNT] = DEFAULT_PLAYER_COUNT
+        return imported_data
+
+    def message_display(self, msg_type_name, imported_data):
         print(TXT_SPACER)
-        print(decorator_1)
         if msg_type_name == 'call round':
-            print (GAME_DATA[0], ' / ', ROUNDS_AVAILABLE)
+            print(TXT_RULE_LONG)
+            print(GAME_DATA[0], ' / ', ROUNDS_AVAILABLE)
+            print(TXT_RULE_LONG)
+        elif msg_type_name == 'call round winner':
+            print(TXT_RULE_LONG)
+            print('Team Winner')
+            print(TXT_RULE_LONG)
+        elif msg_type_name == 'call team info':
+            print(TXT_RULE_LONG)
+            print(imported_data[TEAM_A][TEAM_NAME], ' will play as ', imported_data[TEAM_A][TEAM_SIDE])
+            print(imported_data[TEAM_B][TEAM_NAME], ' will play as ', imported_data[TEAM_B][TEAM_SIDE])
+            print(TXT_RULE_LONG)
+        elif msg_type_name == 'spacer':
+            return None
         else:
-            print ('CALL ERROR: Not an available message')
-        print(decorator_2)
+            print ('CALL ERROR: Not an available message type')
         print(TXT_SPACER)
 
 ## TESTING
 # Testing Initialization
-foo = GAME_INIT(GAME_DATA)
-foo.message_display(TXT_RULE_LONG, 'call round', TXT_RULE_LONG)
+TEST = GAME_INIT(GAME_DATA)
+test_imported_data = TEST.importing_data()
+
+# Singular Test
+TEST.message_display('call round', test_imported_data)
+TEST.message_display('call team info', test_imported_data)
+
+print(test_imported_data)
+test_imported_data[TEAM_A][PLAYER_COUNT] -= 2
+TEST.message_display('spacer', test_imported_data)
+print(test_imported_data)
+TEST.message_display('spacer', test_imported_data)
+test_imported_data = TEST.team_reset(test_imported_data)
+print(test_imported_data)
 
 # Testing Loop
-while foo.game_over() == True:
-    foo.importing_data()
-    foo.round_over()
+__OFF__ = True
+while TEST.game_over() == __OFF__:
+    print ('hi')
+    GAME_DATA = TEST.round_environment_reset()
+    test_imported_data = TEST.team_reset(test_imported_data)
