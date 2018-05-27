@@ -10,6 +10,7 @@
 
 ## IMPORTS
 import random
+import time
 
 ## CONSTANT
 ROUNDS_AVAILABLE = 30 # there are only 30 rounds in one game to play
@@ -21,6 +22,7 @@ DEFAULT_TEAM_SIDE = None # starting sides for teams in the beginning
 STARTING_ROUND = 0
 CT_SIDE = 'Counter Terrorists'
 T_SIDE = 'Terrorists'
+HALVES_AVAILABLE = int(ROUNDS_AVAILABLE / HALFTIME_ROUND)
 
 ## INITIALIZING DATA
 # Team A Basic Data
@@ -66,18 +68,22 @@ GAME_DATA = [rounds_played_tally,
              bomb_planted,
              bomb_defused,
              bomb_plant_limit,
-             bomb_detonated]
+             bomb_detonated,
+             ]
 
 ## TEXT DECORATION
 TXT_SPACER = ' '
 TXT_RULE_LONG = '-'*50
 TXT_RULE_SHORT = '-'*25
+TXT_DOUBLE_RULE_LONG = '='*50
+TXT_DOUBLE_RULE_SHORT = '='*25
 
 ## DATA TAGS
 # Sides
 TEAM_A = 0
 TEAM_B = 1
-# Types
+
+# Team Data Types
 TEAM_NAME = 0
 TEAM_CT_KD = 1
 TEAM_PLANT_RATE = 2
@@ -85,47 +91,27 @@ TEAM_DEFUSE_RATE = 3
 TEAM_SIDE = 4
 PLAYER_COUNT = 5
 
+# Game Data Types
+ID_ROUNDS_PLAYED = 0
+ID_TEAM_A_SCORE = 1
+ID_TEAM_B_SCORE = 2
+ID_BOMB_PLANT = 3
+ID_BOMB_DEFUSE = 4
+ID_BOMB_LMT = 5
+ID_BOMB_DETON = 6
+
+## GLOBAL COMPONENTS
+def sleep(sleep_time):
+    time.sleep(sleep_time)
+
 ## CLASSES
 class GAME_INIT:
 
     def __init__(self, GAME_DATA):
         self.GAME_DATA = GAME_DATA
 
-    def importing_data(self):
-        if GAME_DATA[0] == STARTING_ROUND or GAME_DATA[0] == HALFTIME_ROUND:
-            rolling_teams = [TEAM_A_DATA[TEAM_NAME],TEAM_B_DATA[TEAM_NAME]]
-            rolled_ct_team = rolling_teams.pop(random.randint(0,1))
-            rolled_t_team = rolling_teams[0]
-            team_decided_roles = [rolled_ct_team, rolled_t_team]
-            if team_decided_roles[0] == TEAM_A_DATA[TEAM_NAME]:
-                TEAM_A_DATA[TEAM_SIDE] = CT_SIDE
-                TEAM_B_DATA[TEAM_SIDE] = T_SIDE
-                DATA_FORMATION = [TEAM_A_DATA, TEAM_B_DATA]
-                return DATA_FORMATION
-            else:
-                TEAM_A_DATA[TEAM_SIDE] = T_SIDE
-                TEAM_B_DATA[TEAM_SIDE] = CT_SIDE
-                DATA_FORMATION = [TEAM_B_DATA, TEAM_A_DATA]
-                return DATA_FORMATION
-
-    def game_over(self):
-        if GAME_DATA[0] < ROUNDS_AVAILABLE and GAME_DATA[3] == WINNING_ROUND or GAME_DATA[4] == WINNING_ROUND:
-                return True
-        elif GAME_DATA[3] == HALFTIME_ROUND and GAME_DATA[4] == HALFTIME_ROUND:
-            return True
-        else:
-            return False
-
-    def round_winner(self):
-        # which team got a point - measure delta
-            # in order to do this, needs a past version
-            # then compare with the present version
-            # if the version has a +1, then pass parameter
-        # pass team name with delta to as round winner
-        return 0
-
     def round_environment_reset(self):
-        GAME_DATA[0] += 1
+        GAME_DATA[ID_ROUNDS_PLAYED] += 1
         GAME_DATA[3] = False
         GAME_DATA[4] = False
         GAME_DATA[5] = 0
@@ -137,41 +123,87 @@ class GAME_INIT:
         imported_data[TEAM_B][PLAYER_COUNT] = DEFAULT_PLAYER_COUNT
         return imported_data
 
-    def message_display(self, msg_type_name, imported_data):
+    def user_input(self, msg_type_name):
+        if msg_type_name == 'start':
+            displayed_input = input('Begin match? (Y)es or (N)o : ')
+            return displayed_input
+
+    def static_msg(self, msg_type_name):
         print(TXT_SPACER)
         if msg_type_name == 'call round':
             print(TXT_RULE_LONG)
-            print(GAME_DATA[0], ' / ', ROUNDS_AVAILABLE)
+            print('Round ' , GAME_DATA[ID_ROUNDS_PLAYED] + 1, ' / ' , ROUNDS_AVAILABLE)
             print(TXT_RULE_LONG)
         elif msg_type_name == 'call round winner':
             print(TXT_RULE_LONG)
             print('Team Winner')
             print(TXT_RULE_LONG)
-        elif msg_type_name == 'call team info':
-            print(TXT_RULE_LONG)
-            print(imported_data[TEAM_A][TEAM_NAME], ' will play as ', imported_data[TEAM_A][TEAM_SIDE])
-            print(imported_data[TEAM_B][TEAM_NAME], ' will play as ', imported_data[TEAM_B][TEAM_SIDE])
-            print(TXT_RULE_LONG)
         elif msg_type_name == 'spacer':
             return None
+        elif msg_type_name == 'intro':
+            print('Welcome to the championship match of ESL Tournament')
+            print('This will be a game between', TEAM_A_DATA[TEAM_NAME], 'and', TEAM_B_DATA[TEAM_NAME])
+            sleep(1)
         else:
             print ('CALL ERROR: Not an available message type')
         print(TXT_SPACER)
 
-class GAME_MECH:
+    def sorting_data(self, first_half_teams):
+        if first_half_teams[TEAM_A] == TEAM_A_DATA[TEAM_NAME]:
+            TEAM_A_DATA[TEAM_SIDE] = CT_SIDE
+            TEAM_B_DATA[TEAM_SIDE] = T_SIDE
+            DATA_FORMATION = [TEAM_A_DATA, TEAM_B_DATA]
+            return DATA_FORMATION
+        else:
+            TEAM_A_DATA[TEAM_SIDE] = T_SIDE
+            TEAM_B_DATA[TEAM_SIDE] = CT_SIDE
+            DATA_FORMATION = [TEAM_B_DATA, TEAM_A_DATA]
+            return DATA_FORMATION
 
-    def __init__(self):
-        self.self = None
+    def rolling_sides(self):
+        if GAME_DATA[ID_ROUNDS_PLAYED] == STARTING_ROUND:
+            print ('Rolling sides...')
+            rolling_teams = [TEAM_A_DATA[TEAM_NAME],TEAM_B_DATA[TEAM_NAME]]
+            rolled_ct_team = rolling_teams.pop(random.randint(0,1))
+            rolled_t_team = rolling_teams[0]
+            team_decided_roles = [rolled_ct_team, rolled_t_team]
+            staging_data = self.sorting_data(team_decided_roles)
+            return staging_data
+
+    def switching_sides(self, first_half_teams):
+        team_b = first_half_teams[1][0]
+        team_a = first_half_teams[0][0]
+        first_half_teams[0][0] = team_b
+        first_half_teams[1][0] = team_a
+        return first_half_teams
+
+    def importing_data(self, first_half_teams):
+        if GAME_DATA[ID_ROUNDS_PLAYED] == STARTING_ROUND:
+            team_half_data = self.sorting_data(first_half_teams)
+            return team_half_data
+        elif GAME_DATA[ID_ROUNDS_PLAYED] == HALFTIME_ROUND:
+            team_half_data = self.switching_sides()
+            return team_half_data
+
+    def dynamic_msg(self, msg_type_name, live_sorted_data):
+        print (TXT_SPACER)
+        if GAME_DATA[ID_ROUNDS_PLAYED] == STARTING_ROUND or GAME_DATA[ID_ROUNDS_PLAYED] == HALFTIME_ROUND:
+            if msg_type_name == 'call sides':
+                print(TXT_DOUBLE_RULE_LONG)
+                print(live_sorted_data[TEAM_A][TEAM_NAME],'will play as',live_sorted_data[TEAM_A][TEAM_SIDE])
+                print(live_sorted_data[TEAM_B][TEAM_NAME],'will play as',live_sorted_data[TEAM_B][TEAM_SIDE])
+                print(TXT_DOUBLE_RULE_LONG)
+        print (TXT_SPACER)
 
 ## TESTING
 # Testing Initialization
-TEST = GAME_INIT(GAME_DATA)
-test_imported_data = TEST.importing_data()
-# Singular Test
-TEST.message_display('call round', test_imported_data)
-TEST.message_display('call team info', test_imported_data)
-# Testing Loop
-OFF = True
-while TEST.game_over() == OFF:
-    GAME_DATA = TEST.round_environment_reset()
-    test_imported_data = TEST.team_reset(test_imported_data)
+GAME = GAME_INIT(GAME_DATA)
+GAME.static_msg('intro')
+first_half_teams = GAME.rolling_sides()
+team_data_import = GAME.sorting_data(first_half_teams)
+for GAME_HALF in range (HALVES_AVAILABLE):
+    GAME.dynamic_msg('call sides', team_data_import)
+    for rounds in range (HALFTIME_ROUND):
+        GAME.static_msg('call round')
+        GAME_DATA[ID_ROUNDS_PLAYED] += 1
+        print (team_data_import)
