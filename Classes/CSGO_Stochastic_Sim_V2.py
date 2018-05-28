@@ -71,19 +71,25 @@ TXT_RULE_SHORT = '-'*25
 TXT_DOUBLE_RULE_LONG = '='*50
 TXT_DOUBLE_RULE_SHORT = '='*25
 
+## Glados
+GLADOS = ['We hope your brief detention in the relaxation vault has been a pleasant one.',
+          'Perfect. Please move quickly to the chamberlock, as the effects of prolonged exposure to the Button are not part of this test.',
+          'The cake is a lie',
+          'Please escort your Companion Cube to the Aperture Science Emergency Intelligence Incinerator.']
+
 ## GLOBAL COMPONENTS
 def pause(sleep_time):
     time.sleep(sleep_time)
+
+def aperture():
+    quote_selection = random.randint(0,3)
+    print(GLADOS[quote_selection])
 
 ## CLASSES
 class INIT_GAME:
 
     def __init__(self, GAME_STATES):
         self.GAME_STATES = GAME_STATES
-
-    def input(self, msg_type_name):
-        if msg_type_name == 'start':
-            input('Start simulation? (Y)es or (N)o')
 
     def display(self, msg_type_name):
         print(TXT_SPACER)
@@ -98,34 +104,26 @@ class INIT_GAME:
         elif msg_type_name == 'spacer':
             return None
         elif msg_type_name == 'intro':
-            print('Welcome to the championship match of ESL Tournament')
-            print('This will be a game between', TEAM_A_STATS[TEAM_ID], 'and', TEAM_B_STATS[TEAM_ID])
+            print('Welcome to the Counter Strike Global Offensive game simulator')
+            print('This will be a simulated game between', TEAM_A_STATS[TEAM_ID], 'and', TEAM_B_STATS[TEAM_ID])
         elif msg_type_name == 'planted':
             print('Bomb has been planted!')
         elif msg_type_name == 'sides':
-            if GAME_STATES[0] == STARTING_ROUND or GAME_STATES[0] == HALFTIME_ROUND+1:
+            if GAME_STATES[CURRENT_ROUND] == STARTING_ROUND or GAME_STATES[CURRENT_ROUND] == HALFTIME_ROUND+1:
                 print(TEAM_A_STATS[TEAM_ID], 'will play as', TEAM_A_STATS[TEAM_SIDE])
                 print(TEAM_B_STATS[TEAM_ID], 'will play as', TEAM_B_STATS[TEAM_SIDE])
         elif msg_type_name == 'rolling':
             print('Rolling sides...')
-            pause(3)
         elif msg_type_name == 'switching':
-            print('Switching sides...')
-            pause(3)
+            print('Half time. Switching sides...')
         elif msg_type_name == 'scorekeeper':
             print(TEAM_A_STATS[TEAM_ID], ':', TEAM_A_STATS[POINTS], ' | ', TEAM_B_STATS[TEAM_ID], ':', TEAM_B_STATS[POINTS])
-        elif msg_type_name == 'start':
-            if self.input('start') == 'Y' or self.input('start') == 'y':
-                print('Starting...')
-                pause(3)
-            elif self.input('start') == 'N' or self.input('start') == 'n':
-                print('Simulation canceled')
         else:
             print('CALL ERROR: Not an available message type')
         print(TXT_SPACER)
 
     def rolling_sides(self):
-        if GAME_STATES[0] == STARTING_ROUND:
+        if GAME_STATES[CURRENT_ROUND] == STARTING_ROUND:
             self.display('rolling')
             rolling_teams = [TEAM_A_STATS[TEAM_ID],TEAM_B_STATS[TEAM_ID]]
             rolled_ct_team = rolling_teams.pop(random.randint(0,1))
@@ -155,34 +153,37 @@ class INIT_GAME:
             return DATA_FORMATION
 
     def round_reset(self):
-        GAME_STATES[0] += 1
-        GAME_STATES[1] = False
-        GAME_STATES[2] = False
-        GAME_STATES[3] = 0
-        GAME_STATES[4] = False
+        GAME_STATES[CURRENT_ROUND] += 1
+        GAME_STATES[PLANT_STATE] = False
+        GAME_STATES[DEFUSE_STATE] = False
+        GAME_STATES[PLANT_LIMIT] = 0
+        GAME_STATES[DETONATED] = False
         TEAM_A_STATS[PLAYER_COUNT] = DEFAULT_PLAYER_COUNT
         TEAM_B_STATS[PLAYER_COUNT] = DEFAULT_PLAYER_COUNT
 
     def terminate(self):
-        if TEAM_A_STATS[POINTS] == WINNING_ROUND and GAME_STATES[0] < ROUNDS_AVAILABLE or \
-        TEAM_B_STATS[POINTS] == WINNING_ROUND and GAME_STATES[0] < ROUNDS_AVAILABLE or \
+        if TEAM_A_STATS[POINTS] == WINNING_ROUND and GAME_STATES[CURRENT_ROUND] < ROUNDS_AVAILABLE or \
+        TEAM_B_STATS[POINTS] == WINNING_ROUND and GAME_STATES[CURRENT_ROUND] < ROUNDS_AVAILABLE or \
         TEAM_A_STATS[POINTS] == HALFTIME_ROUND and TEAM_B_STATS[POINTS] == HALFTIME_ROUND and GAME_STATES[0] == ROUNDS_AVAILABLE:
             return True
 
 ## TESTING
 GAME = INIT_GAME(GAME_STATES)
-
 GAME.display('intro')
-GAME.input('start')
-
-TEAMS_DECIDED = GAME.assigning_stats(GAME.rolling_sides())
-for GAME_HALVES in range (HALVES_AVAILABLE):
-    if GAME_STATES[0] == HALFTIME_ROUND:
-        TEAMS_DECIDED = GAME.assigning_stats(GAME.switching_sides(TEAMS_DECIDED))
-    for rounds in range (HALFTIME_ROUND):
-        GAME.display('sides')
-        GAME.display('call round')
-        GAME.display('scorekeeper')
-        GAME.round_reset()
-        if GAME.terminate() == True:
-            break
+STARTING_SIMULATION = input('Start simulation? (Y)es or (N)o : ')
+if STARTING_SIMULATION == 'Y' or STARTING_SIMULATION == 'y':
+    TEAMS_DECIDED = GAME.assigning_stats(GAME.rolling_sides())
+    for GAME_HALVES in range (HALVES_AVAILABLE):
+        if GAME_STATES[CURRENT_ROUND] == HALFTIME_ROUND:
+            TEAMS_DECIDED = GAME.assigning_stats(GAME.switching_sides(TEAMS_DECIDED))
+        for rounds in range (HALFTIME_ROUND):
+            GAME.display('sides')
+            GAME.display('call round')
+            GAME.display('scorekeeper')
+            GAME.round_reset()
+            if GAME.terminate() == True:
+                break
+elif STARTING_SIMULATION == 'N' or STARTING_SIMULATION == 'n':
+    print('Exited.')
+else:
+    aperture()

@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fa434a08-27bc-4670-8390-b6d40459fa0c" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py" beforeDir="false" afterPath="$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Midterm/CSGO_Stochastic_Simulation.py" beforeDir="false" afterPath="$PROJECT_DIR$/Midterm/CSGO_Stochastic_Simulation.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -13,14 +13,14 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.6181672">
+    <splitter split-orientation="horizontal" split-proportion="0.57797426">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="CSGO_Stochastic_Sim_V2.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1799">
-                  <caret line="187" column="17" selection-start-line="187" selection-start-column="17" selection-end-line="187" selection-end-column="17" />
+                <state relative-caret-position="2625">
+                  <caret line="175" column="20" selection-start-line="175" selection-start-column="20" selection-end-line="175" selection-end-column="20" />
                   <folding>
                     <element signature="e#284#297#0" expanded="true" />
                   </folding>
@@ -35,8 +35,8 @@
           <file leaf-file-name="CSGO_Stochastic_Simulation.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/Midterm/CSGO_Stochastic_Simulation.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="393">
-                  <caret line="382" selection-start-line="382" selection-end-line="384" />
+                <state relative-caret-position="-38">
+                  <caret line="354" column="51" selection-start-line="354" selection-start-column="51" selection-end-line="354" selection-end-column="51" />
                 </state>
               </provider>
             </entry>
@@ -44,8 +44,8 @@
           <file leaf-file-name="CSGO_Stochastic_Sim_V2.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-6">
-                  <caret line="151" column="13" selection-start-line="151" selection-start-column="13" selection-end-line="151" selection-end-column="13" />
+                <state relative-caret-position="-8">
+                  <caret line="141" lean-forward="true" selection-start-line="141" selection-end-line="141" />
                   <folding>
                     <element signature="e#284#297#0" expanded="true" />
                   </folding>
@@ -95,6 +95,7 @@
         <option value="$PROJECT_DIR$/Classes/Classes_Exercise.py" />
         <option value="$PROJECT_DIR$/Classes/CSGO_Stochastic_Test.py" />
         <option value="$PROJECT_DIR$/Final_Project/Office_Hours.py" />
+        <option value="$PROJECT_DIR$/Midterm/CSGO_Stochastic_Simulation.py" />
         <option value="$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py" />
       </list>
     </option>
@@ -155,7 +156,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.CSGO_Stochastic_Sim_V2">
+  <component name="RunManager" selected="Python.CSGO_Stochastic_Simulation">
     <configuration name="CSGO_Stochastic_Sim_V2" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Learning-Python-For-Designers" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -273,8 +274,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.CSGO_Stochastic_Sim_V2" />
         <item itemvalue="Python.CSGO_Stochastic_Simulation" />
+        <item itemvalue="Python.CSGO_Stochastic_Sim_V2" />
         <item itemvalue="Python.CSGO_Stochastic_Test" />
         <item itemvalue="Python.Office_Hours" />
         <item itemvalue="Python.Classes_Exercise" />
@@ -303,7 +304,7 @@
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" weight="0.329602" />
       <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Python Console" order="7" />
-      <window_info anchor="bottom" auto_hide="true" x="413" y="22" width="539" height="878" id="Run" order="2" type="FLOATING" weight="0.2039801" />
+      <window_info anchor="bottom" auto_hide="true" x="413" y="22" width="835" height="878" id="Run" order="2" type="FLOATING" weight="0.2039801" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="8" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -394,15 +395,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Midterm/CSGO_Stochastic_Simulation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="393">
-          <caret line="382" selection-start-line="382" selection-end-line="384" />
+        <state relative-caret-position="-38">
+          <caret line="354" column="51" selection-start-line="354" selection-start-column="51" selection-end-line="354" selection-end-column="51" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1799">
-          <caret line="187" column="17" selection-start-line="187" selection-start-column="17" selection-end-line="187" selection-end-column="17" />
+        <state relative-caret-position="2625">
+          <caret line="175" column="20" selection-start-line="175" selection-start-column="20" selection-end-line="175" selection-end-column="20" />
           <folding>
             <element signature="e#284#297#0" expanded="true" />
           </folding>
