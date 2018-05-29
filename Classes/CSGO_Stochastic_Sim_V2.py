@@ -70,9 +70,8 @@ TXT_RULE_LONG = '-'*50
 TXT_RULE_SHORT = '-'*25
 TXT_DOUBLE_RULE_LONG = '='*50
 TXT_DOUBLE_RULE_SHORT = '='*25
-
-## Glados
-GLADOS = ['We hope your brief detention in the relaxation vault has been a pleasant one.',
+# Glados
+because_we_can = ['We hope your brief detention in the relaxation vault has been a pleasant one.',
           'Perfect. Please move quickly to the chamberlock, as the effects of prolonged exposure to the Button are not part of this test.',
           'The cake is a lie',
           'Please escort your Companion Cube to the Aperture Science Emergency Intelligence Incinerator.']
@@ -81,9 +80,9 @@ GLADOS = ['We hope your brief detention in the relaxation vault has been a pleas
 def pause(sleep_time):
     time.sleep(sleep_time)
 
-def aperture():
+def we_do_what_we_must():
     quote_selection = random.randint(0,3)
-    print(GLADOS[quote_selection])
+    print(because_we_can[quote_selection])
 
 ## CLASSES
 class INIT_GAME:
@@ -109,9 +108,8 @@ class INIT_GAME:
         elif msg_type_name == 'planted':
             print('Bomb has been planted!')
         elif msg_type_name == 'sides':
-            if GAME_STATES[CURRENT_ROUND] == STARTING_ROUND or GAME_STATES[CURRENT_ROUND] == HALFTIME_ROUND+1:
-                print(TEAM_A_STATS[TEAM_ID], 'will play as', TEAM_A_STATS[TEAM_SIDE])
-                print(TEAM_B_STATS[TEAM_ID], 'will play as', TEAM_B_STATS[TEAM_SIDE])
+            print(TEAM_A_STATS[TEAM_ID], 'will play as', TEAM_A_STATS[TEAM_SIDE])
+            print(TEAM_B_STATS[TEAM_ID], 'will play as', TEAM_B_STATS[TEAM_SIDE])
         elif msg_type_name == 'rolling':
             print('Rolling sides...')
         elif msg_type_name == 'switching':
@@ -122,6 +120,14 @@ class INIT_GAME:
             print('CALL ERROR: Not an available message type')
         print(TXT_SPACER)
 
+    def assign_ct_b(self):
+        TEAM_A_STATS[TEAM_SIDE] = T_SIDE
+        TEAM_B_STATS[TEAM_SIDE] = CT_SIDE
+
+    def assign_ct_a(self):
+        TEAM_A_STATS[TEAM_SIDE] = CT_SIDE
+        TEAM_B_STATS[TEAM_SIDE] = T_SIDE
+
     def rolling_sides(self):
         if GAME_STATES[CURRENT_ROUND] == STARTING_ROUND:
             self.display('rolling')
@@ -131,26 +137,18 @@ class INIT_GAME:
             decided_side = [rolled_ct_team, rolled_t_team]
             return decided_side
 
-    def switching_sides(self, first_half_teams):
-        self.display('switching')
-        if first_half_teams[TEAM_A][TEAM_ID] == TEAM_A_STATS[TEAM_ID]:
-            flipped_teams = [TEAM_B_STATS[TEAM_ID], TEAM_A_STATS[TEAM_ID]]
-            return flipped_teams
+    def assigning_team(self):
+        if TEAM_A_STATS[TEAM_SIDE] == CT_SIDE:
+            self.assign_ct_a()
         else:
-            flipped_teams = [TEAM_A_STATS[TEAM_ID], TEAM_B_STATS[TEAM_ID]]
-            return flipped_teams
+            self.assign_ct_b()
 
-    def assigning_stats(self, decided_side):
-        if decided_side[TEAM_A] == TEAM_A_STATS[TEAM_ID]:
-            TEAM_A_STATS[TEAM_SIDE] = CT_SIDE
-            TEAM_B_STATS[TEAM_SIDE] = T_SIDE
-            DATA_FORMATION = [TEAM_A_STATS, TEAM_B_STATS]
-            return DATA_FORMATION
+    def switching_sides(self):
+        self.display('switching')
+        if TEAM_A_STATS[TEAM_ID] == CT_SIDE:
+            self.assign_ct_b()
         else:
-            TEAM_A_STATS[TEAM_SIDE] = T_SIDE
-            TEAM_B_STATS[TEAM_SIDE] = CT_SIDE
-            DATA_FORMATION = [TEAM_B_STATS, TEAM_A_STATS]
-            return DATA_FORMATION
+            self.assign_ct_a()
 
     def round_reset(self):
         GAME_STATES[CURRENT_ROUND] += 1
@@ -161,29 +159,73 @@ class INIT_GAME:
         TEAM_A_STATS[PLAYER_COUNT] = DEFAULT_PLAYER_COUNT
         TEAM_B_STATS[PLAYER_COUNT] = DEFAULT_PLAYER_COUNT
 
+    def starting_simulation(self):
+        self.rolling_sides()
+        self.assigning_team()
+        self.display('sides')
+
+    def halftime(self):
+        self.switching_sides()
+        self.display('sides')
+
     def terminate(self):
         if TEAM_A_STATS[POINTS] == WINNING_ROUND and GAME_STATES[CURRENT_ROUND] < ROUNDS_AVAILABLE or \
         TEAM_B_STATS[POINTS] == WINNING_ROUND and GAME_STATES[CURRENT_ROUND] < ROUNDS_AVAILABLE or \
         TEAM_A_STATS[POINTS] == HALFTIME_ROUND and TEAM_B_STATS[POINTS] == HALFTIME_ROUND and GAME_STATES[0] == ROUNDS_AVAILABLE:
             return True
 
+    def round_winner(self, winner_team):
+        winner_team[POINTS] += 1
+
+    def team_elimination(self):
+        if TEAM_A_STATS[PLAYER_COUNT] == 0:
+            self.round_winner(TEAM_B_STATS)
+        elif TEAM_B_STATS[PLAYER_COUNT] == 0:
+            self.round_winner(TEAM_A_STATS)
+
+    def ct_win(self):
+        if GAME_STATES[DEFUSE_STATE] == True:
+            if TEAM_A_STATS[TEAM_SIDE] == CT_SIDE:
+                self.round_winner(TEAM_A_STATS)
+            else:
+                self.round_winner(TEAM_B_STATS)
+
+    def t_win(self):
+        if GAME_STATES[DETONATED] == True:
+            if TEAM_A_STATS[TEAM_SIDE] == T_SIDE:
+                self.round_winner(TEAM_A_STATS)
+            else:
+                self.round_winner(TEAM_B_STATS)
+
+    def round_over(self):
+        self.team_elimination()
+        self.ct_win()
+        self.t_win()
+        self.round_reset()
+
+    def player_encounter(self):
+        if TEAM_A_STATS[TEAM_SIDE] == CT_SIDE:
+            if random.randint(0,100) <= int()
+
+#    def game_round(self):
+#        while TEAM_A_STATS[PLAYER_COUNT] > 0 and TEAM_B_STATS[PLAYER_COUNT] > 0:
+
 ## TESTING
 GAME = INIT_GAME(GAME_STATES)
 GAME.display('intro')
 STARTING_SIMULATION = input('Start simulation? (Y)es or (N)o : ')
 if STARTING_SIMULATION == 'Y' or STARTING_SIMULATION == 'y':
-    TEAMS_DECIDED = GAME.assigning_stats(GAME.rolling_sides())
+    GAME.starting_simulation()
     for GAME_HALVES in range (HALVES_AVAILABLE):
         if GAME_STATES[CURRENT_ROUND] == HALFTIME_ROUND:
-            TEAMS_DECIDED = GAME.assigning_stats(GAME.switching_sides(TEAMS_DECIDED))
+            GAME.halftime()
         for rounds in range (HALFTIME_ROUND):
-            GAME.display('sides')
             GAME.display('call round')
             GAME.display('scorekeeper')
-            GAME.round_reset()
+            GAME.round_over()
             if GAME.terminate() == True:
                 break
 elif STARTING_SIMULATION == 'N' or STARTING_SIMULATION == 'n':
     print('Exited.')
 else:
-    aperture()
+    we_do_what_we_must()
