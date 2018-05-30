@@ -80,8 +80,6 @@ because_we_can = ['We hope your brief detention in the relaxation vault has been
           'The cake is a lie',
           'Please escort your Companion Cube to the Aperture Science Emergency Intelligence Incinerator.']
 
-SIMULATE = random.randint(0,100)
-
 ## GLOBAL COMPONENTS
 def pause(sleep_time):
     time.sleep(sleep_time)
@@ -119,18 +117,28 @@ class INIT_GAME:
             print(TEAM_A_STATS[TEAM_ID], ':', TEAM_A_STATS[POINTS], ' | ', TEAM_B_STATS[TEAM_ID], ':', TEAM_B_STATS[POINTS])
         elif msg_type_name == 'no kill':
             print('No one is killed yet.')
+        elif msg_type_name == 'bomb plant':
+            print('Bomb has been planted!')
+        elif msg_type_name == 'defusing':
+            print('Defusing...')
+        elif msg_type_name == 'ct win':
+            print('Counter Terrorists win!')
+        elif msg_type_name == 't win':
+            print('Terrorists win!')
         else:
             print('CALL ERROR: Not an available message type')
         print(TXT_SPACER)
 
     def weapon_use(self):
         if GAME_STATES[CURRENT_ROUND] == 1 or GAME_STATES[CURRENT_ROUND] == HALFTIME_ROUND:
-            return random.randint(0,len(PISTOL)-1)
+            return PISTOL[random.randint(0,len(PISTOL)-1)]
         else:
-            return random.randint(0,len(RIFLE)-1)
+            return RIFLE[random.randint(0,len(RIFLE)-1)]
 
     def exchange_log(self, team, opposition):
-        print(team, self.weapon_use(), 'a player on team' ,opposition)
+        print(TXT_SPACER)
+        print(team, 'killed a player on' ,opposition, 'with', self.weapon_use())
+        print(TXT_SPACER)
 
     def assign_ct_b(self):
         TEAM_A_STATS[TEAM_SIDE] = T_SIDE
@@ -166,7 +174,7 @@ class INIT_GAME:
         GAME_STATES[CURRENT_ROUND] += 1
         GAME_STATES[PLANT_STATE] = False
         GAME_STATES[DEFUSE_STATE] = False
-        GAME_STATES[PLANT_LIMIT] = 0
+        GAME_STATES[PLANT_LIMIT] = False
         GAME_STATES[DETONATED] = False
         TEAM_A_STATS[PLAYER_COUNT] = DEFAULT_PLAYER_COUNT
         TEAM_B_STATS[PLAYER_COUNT] = DEFAULT_PLAYER_COUNT
@@ -192,22 +200,34 @@ class INIT_GAME:
     def team_elimination(self):
         if TEAM_A_STATS[PLAYER_COUNT] == 0:
             self.round_winner(TEAM_B_STATS)
+            if TEAM_B_STATS[TEAM_SIDE] == CT_SIDE:
+                self.display('ct win')
+            else:
+                self.display('t win')
         elif TEAM_B_STATS[PLAYER_COUNT] == 0:
             self.round_winner(TEAM_A_STATS)
+            if TEAM_A_STATS[TEAM_SIDE] == CT_SIDE:
+                self.display('ct win')
+            else:
+                self.display('t win')
 
     def ct_win(self):
         if GAME_STATES[DEFUSE_STATE] == True:
             if TEAM_A_STATS[TEAM_SIDE] == CT_SIDE:
                 self.round_winner(TEAM_A_STATS)
+                self.display('ct win')
             else:
                 self.round_winner(TEAM_B_STATS)
+                self.display('ct win')
 
     def t_win(self):
         if GAME_STATES[DETONATED] == True:
             if TEAM_A_STATS[TEAM_SIDE] == T_SIDE:
                 self.round_winner(TEAM_A_STATS)
+                self.display('t win')
             else:
                 self.round_winner(TEAM_B_STATS)
+                self.display('t win')
 
     def round_over(self):
         self.team_elimination()
@@ -217,21 +237,54 @@ class INIT_GAME:
 
     def player_encounter(self):
         if TEAM_A_STATS[TEAM_SIDE] == CT_SIDE:
-            if SIMULATE <= int(TEAM_A_STATS[TEAM_CT_KD]):
+            if random.randint(0,100) <= int(TEAM_A_STATS[TEAM_CT_KD]):
                 TEAM_B_STATS[PLAYER_COUNT] -= 1
                 self.exchange_log(TEAM_A_STATS[TEAM_ID], TEAM_B_STATS[TEAM_ID])
-            elif no_exchange(TEAM_A_STATS) <= SIMULATE >= TEAM_A_STATS[TEAM_CT_KD] or no_exchange(TEAM_B_STATS) <= SIMULATE >= TEAM_B_STATS[TEAM_CT_KD]:
+            elif no_exchange(TEAM_A_STATS) <= random.randint(0,100) >= TEAM_A_STATS[TEAM_CT_KD] or no_exchange(TEAM_B_STATS) <= random.randint(0,100) >= TEAM_B_STATS[TEAM_CT_KD]:
                 self.display('no kill')
         else:
-            if SIMULATE <= int(TEAM_B_STATS[TEAM_CT_KD]):
+            if random.randint(0,100) <= int(TEAM_B_STATS[TEAM_CT_KD]):
                 TEAM_A_STATS[PLAYER_COUNT] -= 1
                 self.exchange_log(TEAM_B_STATS[TEAM_ID], TEAM_A_STATS[TEAM_ID])
-            elif no_exchange(TEAM_B_STATS) <= SIMULATE >= TEAM_B_STATS[TEAM_CT_KD] or no_exchange(TEAM_B_STATS) <= SIMULATE >= TEAM_B_STATS[TEAM_CT_KD]:
+            elif no_exchange(TEAM_B_STATS) <= random.randint(0,100) >= TEAM_B_STATS[TEAM_CT_KD] or no_exchange(TEAM_B_STATS) <= random.randint(0,100) >= TEAM_B_STATS[TEAM_CT_KD]:
                 self.display('no kill')
-        self.display('scorekeeper')
 
-#    def game_round(self):
-#        while TEAM_A_STATS[PLAYER_COUNT] > 0 and TEAM_B_STATS[PLAYER_COUNT] > 0:
+    def bomb_plant_confidence(self):
+        if TEAM_A_STATS[TEAM_SIDE] == T_SIDE:
+            if TEAM_A_STATS[PLAYER_COUNT] - TEAM_B_STATS[PLAYER_COUNT] >= 2:
+                return True
+            elif TEAM_A_STATS[PLAYER_COUNT] >= 1 and TEAM_B_STATS[PLAYER_COUNT] == 1:
+                return True
+        else:
+            if TEAM_B_STATS[PLAYER_COUNT] - TEAM_A_STATS[PLAYER_COUNT] >= 2:
+                return True
+            elif TEAM_B_STATS[PLAYER_COUNT] >= 1 and TEAM_A_STATS[PLAYER_COUNT] == 1:
+                return True
+
+    def bomb_plant(self):
+        if GAME_STATES[PLANT_STATE] == False and GAME_STATES[CURRENT_ROUND] < ROUNDS_AVAILABLE and self.bomb_plant_confidence() == True:
+                if TEAM_A_STATS[TEAM_SIDE] == T_SIDE and random.randint(0,100) <= TEAM_A_STATS[TEAM_PLANT_RATE] or TEAM_B_STATS[TEAM_SIDE] == T_SIDE and random.randint(0,100) <= TEAM_B_STATS[TEAM_PLANT_RATE]:
+                    GAME_STATES[PLANT_STATE] = True
+                    GAME_STATES[PLANT_LIMIT] = True
+                    self.display('bomb plant')
+
+    def bomb_defusal(self):
+        if GAME_STATES[PLANT_STATE] == True:
+            if TEAM_A_STATS[TEAM_SIDE] == CT_SIDE and TEAM_A_STATS[PLAYER_COUNT] > 0 and TEAM_B_STATS[PLAYER_COUNT] <= 2:
+                self.display('defusing')
+                if random.randint(0,100) <= TEAM_A_STATS[TEAM_PLANT_RATE]:
+                    GAME_STATES[PLANT_STATE] = False
+                    self.round_over()
+                else:
+                    GAME_STATES[DETONATED] = True
+                    self.round_over()
+
+    def game_round(self):
+        while TEAM_A_STATS[PLAYER_COUNT] > 0 and TEAM_B_STATS[PLAYER_COUNT] > 0:
+            self.player_encounter()
+        self.bomb_plant()
+        self.bomb_defusal()
+
 
 ## TESTING
 GAME = INIT_GAME(GAME_STATES)
@@ -244,8 +297,9 @@ if STARTING_SIMULATION == 'Y' or STARTING_SIMULATION == 'y':
             GAME.halftime()
         for rounds in range (HALFTIME_ROUND):
             GAME.display('call round')
-            GAME.player_encounter()
+            GAME.game_round()
             GAME.round_over()
+            GAME.display('scorekeeper')
             if GAME.terminate() == True:
                 break
 elif STARTING_SIMULATION == 'N' or STARTING_SIMULATION == 'n':
