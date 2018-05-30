@@ -70,15 +70,24 @@ TXT_RULE_LONG = '-'*50
 TXT_RULE_SHORT = '-'*25
 TXT_DOUBLE_RULE_LONG = '='*50
 TXT_DOUBLE_RULE_SHORT = '='*25
+
+PISTOL = ['Glock-18', 'P250', 'Tec-9', 'Desert Eagle', 'Dual Berettas', 'CZ75 Auto', 'R8 Revolver', 'P2000', 'USP-S']
+RIFLE = ['MAC-10', 'PP-Bizon', 'UMP-45', 'Galil AR', 'AK-47', 'M4A4', 'M4A1-S', 'SSG-08', 'AWP']
+
 # Glados
 because_we_can = ['We hope your brief detention in the relaxation vault has been a pleasant one.',
           'Perfect. Please move quickly to the chamberlock, as the effects of prolonged exposure to the Button are not part of this test.',
           'The cake is a lie',
           'Please escort your Companion Cube to the Aperture Science Emergency Intelligence Incinerator.']
 
+SIMULATE = random.randint(0,100)
+
 ## GLOBAL COMPONENTS
 def pause(sleep_time):
     time.sleep(sleep_time)
+
+def no_exchange(team_ct_kd):
+    return team_ct_kd[TEAM_CT_KD] + team_exchange_survival
 
 def we_do_what_we_must():
     quote_selection = random.randint(0,3)
@@ -96,17 +105,9 @@ class INIT_GAME:
             print(TXT_RULE_LONG)
             print('Round ', GAME_STATES[0] + 1, ' / ', ROUNDS_AVAILABLE)
             print(TXT_RULE_LONG)
-        elif msg_type_name == 'call round winner':
-            print(TXT_RULE_LONG)
-            print('Team Winner')
-            print(TXT_RULE_LONG)
-        elif msg_type_name == 'spacer':
-            return None
         elif msg_type_name == 'intro':
             print('Welcome to the Counter Strike Global Offensive game simulator')
             print('This will be a simulated game between', TEAM_A_STATS[TEAM_ID], 'and', TEAM_B_STATS[TEAM_ID])
-        elif msg_type_name == 'planted':
-            print('Bomb has been planted!')
         elif msg_type_name == 'sides':
             print(TEAM_A_STATS[TEAM_ID], 'will play as', TEAM_A_STATS[TEAM_SIDE])
             print(TEAM_B_STATS[TEAM_ID], 'will play as', TEAM_B_STATS[TEAM_SIDE])
@@ -116,9 +117,20 @@ class INIT_GAME:
             print('Half time. Switching sides...')
         elif msg_type_name == 'scorekeeper':
             print(TEAM_A_STATS[TEAM_ID], ':', TEAM_A_STATS[POINTS], ' | ', TEAM_B_STATS[TEAM_ID], ':', TEAM_B_STATS[POINTS])
+        elif msg_type_name == 'no kill':
+            print('No one is killed yet.')
         else:
             print('CALL ERROR: Not an available message type')
         print(TXT_SPACER)
+
+    def weapon_use(self):
+        if GAME_STATES[CURRENT_ROUND] == 1 or GAME_STATES[CURRENT_ROUND] == HALFTIME_ROUND:
+            return random.randint(0,len(PISTOL)-1)
+        else:
+            return random.randint(0,len(RIFLE)-1)
+
+    def exchange_log(self, team, opposition):
+        print(team, self.weapon_use(), 'a player on team' ,opposition)
 
     def assign_ct_b(self):
         TEAM_A_STATS[TEAM_SIDE] = T_SIDE
@@ -205,7 +217,18 @@ class INIT_GAME:
 
     def player_encounter(self):
         if TEAM_A_STATS[TEAM_SIDE] == CT_SIDE:
-            if random.randint(0,100) <= int()
+            if SIMULATE <= int(TEAM_A_STATS[TEAM_CT_KD]):
+                TEAM_B_STATS[PLAYER_COUNT] -= 1
+                self.exchange_log(TEAM_A_STATS[TEAM_ID], TEAM_B_STATS[TEAM_ID])
+            elif no_exchange(TEAM_A_STATS) <= SIMULATE >= TEAM_A_STATS[TEAM_CT_KD] or no_exchange(TEAM_B_STATS) <= SIMULATE >= TEAM_B_STATS[TEAM_CT_KD]:
+                self.display('no kill')
+        else:
+            if SIMULATE <= int(TEAM_B_STATS[TEAM_CT_KD]):
+                TEAM_A_STATS[PLAYER_COUNT] -= 1
+                self.exchange_log(TEAM_B_STATS[TEAM_ID], TEAM_A_STATS[TEAM_ID])
+            elif no_exchange(TEAM_B_STATS) <= SIMULATE >= TEAM_B_STATS[TEAM_CT_KD] or no_exchange(TEAM_B_STATS) <= SIMULATE >= TEAM_B_STATS[TEAM_CT_KD]:
+                self.display('no kill')
+        self.display('scorekeeper')
 
 #    def game_round(self):
 #        while TEAM_A_STATS[PLAYER_COUNT] > 0 and TEAM_B_STATS[PLAYER_COUNT] > 0:
@@ -221,7 +244,7 @@ if STARTING_SIMULATION == 'Y' or STARTING_SIMULATION == 'y':
             GAME.halftime()
         for rounds in range (HALFTIME_ROUND):
             GAME.display('call round')
-            GAME.display('scorekeeper')
+            GAME.player_encounter()
             GAME.round_over()
             if GAME.terminate() == True:
                 break
