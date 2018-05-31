@@ -6,6 +6,10 @@
 import random
 import time
 
+## TEST SWTICH
+ON = False
+OFF = True
+
 ## CONSTANT
 ROUNDS_AVAILABLE = 30
 HALFTIME_ROUND = int(ROUNDS_AVAILABLE/2)
@@ -73,23 +77,26 @@ TXT_DOUBLE_RULE_SHORT = '='*25
 
 PISTOL = ['Glock-18', 'P250', 'Tec-9', 'Desert Eagle', 'Dual Berettas', 'CZ75 Auto', 'R8 Revolver', 'P2000', 'USP-S']
 RIFLE = ['MAC-10', 'PP-Bizon', 'UMP-45', 'Galil AR', 'AK-47', 'M4A4', 'M4A1-S', 'SSG-08', 'AWP']
-
-# Glados
-because_we_can = ['We hope your brief detention in the relaxation vault has been a pleasant one.',
+glados_words = ['We hope your brief detention in the relaxation vault has been a pleasant one.',
           'Perfect. Please move quickly to the chamberlock, as the effects of prolonged exposure to the Button are not part of this test.',
           'The cake is a lie',
           'Please escort your Companion Cube to the Aperture Science Emergency Intelligence Incinerator.']
 
+test_switch = ON
+
 ## GLOBAL COMPONENTS
 def pause(sleep_time):
-    time.sleep(sleep_time)
+    if test_switch == OFF:
+        time.sleep(sleep_time)
+    elif test_switch == ON:
+        time.sleep(0)
 
 def no_exchange(team_ct_kd):
     return team_ct_kd[TEAM_CT_KD] + team_exchange_survival
 
-def we_do_what_we_must():
+def glados():
     quote_selection = random.randint(0,3)
-    print(because_we_can[quote_selection])
+    print(glados_words[quote_selection])
 
 ## CLASSES
 class INIT_GAME:
@@ -128,6 +135,10 @@ class INIT_GAME:
         else:
             print('CALL ERROR: Not an available message type')
         print(TXT_SPACER)
+        pause(1)
+
+    def kill_log(self, killer, killed):
+        print(killer, 'killed a player in', killed)
 
     def weapon_use(self):
         if GAME_STATES[CURRENT_ROUND] == 1 or GAME_STATES[CURRENT_ROUND] == HALFTIME_ROUND:
@@ -179,7 +190,7 @@ class INIT_GAME:
         TEAM_A_STATS[PLAYER_COUNT] = DEFAULT_PLAYER_COUNT
         TEAM_B_STATS[PLAYER_COUNT] = DEFAULT_PLAYER_COUNT
 
-    def starting_simulation(self):
+    def start(self):
         self.rolling_sides()
         self.assigning_team()
         self.display('sides')
@@ -194,115 +205,40 @@ class INIT_GAME:
         TEAM_A_STATS[POINTS] == HALFTIME_ROUND and TEAM_B_STATS[POINTS] == HALFTIME_ROUND and GAME_STATES[0] == ROUNDS_AVAILABLE:
             return True
 
-    def round_winner(self, winner_team):
-        winner_team[POINTS] += 1
+    def main(self):
+        if TEAM_A_STATS[TEAM_SIDE] == CT_SIDE and random.randint(0,100) <= int(TEAM_A_STATS[TEAM_CT_KD]) or TEAM_A_STATS[TEAM_SIDE] == T_SIDE and random.randint(0,100) >= int(TEAM_A_STATS[TEAM_CT_KD]):
+            TEAM_B_STATS[PLAYER_COUNT] -= 1
+            self.kill_log(TEAM_A_STATS[TEAM_ID], TEAM_B_STATS[TEAM_ID])
+        elif TEAM_B_STATS[TEAM_SIDE] == CT_SIDE and random.randint(0,100) <= int(TEAM_A_STATS[TEAM_CT_KD]) or TEAM_A_STATS[TEAM_SIDE] == T_SIDE and random .randint(0,100) >= int(TEAM_A_STATS[TEAM_CT_KD]):
+            TEAM_A_STATS[PLAYER_COUNT] -= 1
+            self.kill_log(TEAM_B_STATS[TEAM_ID], TEAM_A_STATS[TEAM_ID])
 
-    def team_elimination(self):
-        if TEAM_A_STATS[PLAYER_COUNT] == 0:
-            self.round_winner(TEAM_B_STATS)
-            if TEAM_B_STATS[TEAM_SIDE] == CT_SIDE:
-                self.display('ct win')
-            else:
-                self.display('t win')
-        elif TEAM_B_STATS[PLAYER_COUNT] == 0:
-            self.round_winner(TEAM_A_STATS)
-            if TEAM_A_STATS[TEAM_SIDE] == CT_SIDE:
-                self.display('ct win')
-            else:
-                self.display('t win')
-
-    def ct_win(self):
-        if GAME_STATES[DEFUSE_STATE] == True:
-            if TEAM_A_STATS[TEAM_SIDE] == CT_SIDE:
-                self.round_winner(TEAM_A_STATS)
-                self.display('ct win')
-            else:
-                self.round_winner(TEAM_B_STATS)
-                self.display('ct win')
-
-    def t_win(self):
-        if GAME_STATES[DETONATED] == True:
-            if TEAM_A_STATS[TEAM_SIDE] == T_SIDE:
-                self.round_winner(TEAM_A_STATS)
-                self.display('t win')
-            else:
-                self.round_winner(TEAM_B_STATS)
-                self.display('t win')
-
-    def round_over(self):
-        self.team_elimination()
-        self.ct_win()
-        self.t_win()
-        self.round_reset()
-
-    def player_encounter(self):
-        if TEAM_A_STATS[TEAM_SIDE] == CT_SIDE:
-            if random.randint(0,100) <= int(TEAM_A_STATS[TEAM_CT_KD]):
-                TEAM_B_STATS[PLAYER_COUNT] -= 1
-                self.exchange_log(TEAM_A_STATS[TEAM_ID], TEAM_B_STATS[TEAM_ID])
-            elif no_exchange(TEAM_A_STATS) <= random.randint(0,100) >= TEAM_A_STATS[TEAM_CT_KD] or no_exchange(TEAM_B_STATS) <= random.randint(0,100) >= TEAM_B_STATS[TEAM_CT_KD]:
-                self.display('no kill')
+    def round_on(self):
+        if TEAM_A_STATS[PLAYER_COUNT] > 0 and TEAM_B_STATS[PLAYER_COUNT] > 0:
+            return True
         else:
-            if random.randint(0,100) <= int(TEAM_B_STATS[TEAM_CT_KD]):
-                TEAM_A_STATS[PLAYER_COUNT] -= 1
-                self.exchange_log(TEAM_B_STATS[TEAM_ID], TEAM_A_STATS[TEAM_ID])
-            elif no_exchange(TEAM_B_STATS) <= random.randint(0,100) >= TEAM_B_STATS[TEAM_CT_KD] or no_exchange(TEAM_B_STATS) <= random.randint(0,100) >= TEAM_B_STATS[TEAM_CT_KD]:
-                self.display('no kill')
-
-    def bomb_plant_confidence(self):
-        if TEAM_A_STATS[TEAM_SIDE] == T_SIDE:
-            if TEAM_A_STATS[PLAYER_COUNT] - TEAM_B_STATS[PLAYER_COUNT] >= 2:
-                return True
-            elif TEAM_A_STATS[PLAYER_COUNT] >= 1 and TEAM_B_STATS[PLAYER_COUNT] == 1:
-                return True
-        else:
-            if TEAM_B_STATS[PLAYER_COUNT] - TEAM_A_STATS[PLAYER_COUNT] >= 2:
-                return True
-            elif TEAM_B_STATS[PLAYER_COUNT] >= 1 and TEAM_A_STATS[PLAYER_COUNT] == 1:
-                return True
-
-    def bomb_plant(self):
-        if GAME_STATES[PLANT_STATE] == False and GAME_STATES[CURRENT_ROUND] < ROUNDS_AVAILABLE and self.bomb_plant_confidence() == True:
-                if TEAM_A_STATS[TEAM_SIDE] == T_SIDE and random.randint(0,100) <= TEAM_A_STATS[TEAM_PLANT_RATE] or TEAM_B_STATS[TEAM_SIDE] == T_SIDE and random.randint(0,100) <= TEAM_B_STATS[TEAM_PLANT_RATE]:
-                    GAME_STATES[PLANT_STATE] = True
-                    GAME_STATES[PLANT_LIMIT] = True
-                    self.display('bomb plant')
-
-    def bomb_defusal(self):
-        if GAME_STATES[PLANT_STATE] == True:
-            if TEAM_A_STATS[TEAM_SIDE] == CT_SIDE and TEAM_A_STATS[PLAYER_COUNT] > 0 and TEAM_B_STATS[PLAYER_COUNT] <= 2:
-                self.display('defusing')
-                if random.randint(0,100) <= TEAM_A_STATS[TEAM_PLANT_RATE]:
-                    GAME_STATES[PLANT_STATE] = False
-                    self.round_over()
-                else:
-                    GAME_STATES[DETONATED] = True
-                    self.round_over()
-
-    def game_round(self):
-        while TEAM_A_STATS[PLAYER_COUNT] > 0 and TEAM_B_STATS[PLAYER_COUNT] > 0:
-            self.player_encounter()
-        self.bomb_plant()
-        self.bomb_defusal()
-
+            return False
 
 ## TESTING
 GAME = INIT_GAME(GAME_STATES)
 GAME.display('intro')
 STARTING_SIMULATION = input('Start simulation? (Y)es or (N)o : ')
 if STARTING_SIMULATION == 'Y' or STARTING_SIMULATION == 'y':
-    GAME.starting_simulation()
-    for GAME_HALVES in range (HALVES_AVAILABLE):
+    GAME.start()
+    for HALVES in range (HALVES_AVAILABLE):
         if GAME_STATES[CURRENT_ROUND] == HALFTIME_ROUND:
             GAME.halftime()
         for rounds in range (HALFTIME_ROUND):
             GAME.display('call round')
-            GAME.game_round()
-            GAME.round_over()
+            while GAME.round_on() == True:
+                GAME.main()
+            GAME.round_reset()
             GAME.display('scorekeeper')
             if GAME.terminate() == True:
                 break
 elif STARTING_SIMULATION == 'N' or STARTING_SIMULATION == 'n':
     print('Exited.')
+elif STARTING_SIMULATION == 'Glados':
+    glados()
 else:
-    we_do_what_we_must()
+    print('Exited.')
