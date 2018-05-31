@@ -29,6 +29,7 @@ team_A_side = DEFAULT_TEAM_SIDE # what side currently playing as, ct or t
 team_A_points = DEFAULT_TEAM_SCORE # score
 team_A_players = DEFAULT_PLAYER_COUNT # players alive
 team_A_ct_elim_rate = 48.2
+team_A_t_elim_rate = 45.7
 team_A_t_plant_rate = 55
 team_A_ct_defuse_rate = 33
 # Team B Stats
@@ -37,6 +38,7 @@ team_B_side = DEFAULT_TEAM_SIDE # what side currently playing as, ct or t
 team_B_points = DEFAULT_TEAM_SCORE # team B score; starts at 0
 team_B_players = DEFAULT_PLAYER_COUNT # players alive
 team_B_ct_elim_rate = 48.1
+team_B_t_elim_rate = 47.8
 team_B_t_plant_rate = 53
 team_B_ct_defuse_rate = 32
 team_exchange_survival = 6 # chance of both teams surviving a gun exchange
@@ -49,17 +51,16 @@ bomb_detonated = False
 
 ## Lists
 # Teams
-TEAM_A_STATS = [team_A_ID, team_A_ct_elim_rate, team_A_t_plant_rate, team_A_ct_defuse_rate, team_A_side, team_A_players, team_A_points]
-TEAM_B_STATS = [team_B_ID, team_B_ct_elim_rate, team_B_t_plant_rate, team_B_ct_defuse_rate, team_B_side, team_B_players, team_B_points]
-TEAM_A = 0
-TEAM_B = 1
+TEAM_A_STATS = [team_A_ID, team_A_ct_elim_rate, team_A_t_elim_rate, team_A_t_plant_rate, team_A_ct_defuse_rate, team_A_side, team_A_players, team_A_points]
+TEAM_B_STATS = [team_B_ID, team_B_ct_elim_rate, team_B_t_elim_rate, team_B_t_plant_rate, team_B_ct_defuse_rate, team_B_side, team_B_players, team_B_points]
 TEAM_ID = 0
 TEAM_CT_KD = 1
-TEAM_PLANT_RATE = 2
-TEAM_DEFUSE_RATE = 3
-TEAM_SIDE = 4
-PLAYER_COUNT = 5
-POINTS = 6
+TEAM_T_KD = 2
+TEAM_PLANT_RATE = 3
+TEAM_DEFUSE_RATE = 4
+TEAM_SIDE = 5
+PLAYER_COUNT = 6
+POINTS = 7
 # Game
 GAME_STATES = [rounds_played_tally, bomb_planted, bomb_defused, bomb_plant_limit, bomb_detonated,]
 CURRENT_ROUND = 0
@@ -128,10 +129,6 @@ class INIT_GAME:
             print('Bomb has been planted!')
         elif msg_type_name == 'defusing':
             print('Defusing...')
-        elif msg_type_name == 'ct win':
-            print('Counter Terrorists win!')
-        elif msg_type_name == 't win':
-            print('Terrorists win!')
         else:
             print('CALL ERROR: Not an available message type')
         print(TXT_SPACER)
@@ -181,6 +178,35 @@ class INIT_GAME:
         else:
             self.assign_ct_a()
 
+    def round_active(self):
+        if TEAM_A_STATS[PLAYER_COUNT] > 0 and TEAM_B_STATS[PLAYER_COUNT] > 0:
+            return True
+        else:
+            return False
+
+    def kill(self,killer_team_stat,killed_team_stat):
+        if killer_team_stat[TEAM_SIDE] == CT_SIDE:
+            if random.randint(0,100) <= int(killer_team_stat[TEAM_CT_KD]):
+                killed_team_stat[PLAYER_COUNT] -= 1
+                self.kill_log(killer_team_stat[TEAM_ID], killed_team_stat[TEAM_ID])
+            else:
+                killer_team_stat[PLAYER_COUNT] -= 1
+                self.kill_log(killed_team_stat[TEAM_ID], killer_team_stat[TEAM_ID])
+        else:
+            if random.randint(0,100) <= int(killer_team_stat[TEAM_T_KD]):
+                killed_team_stat[PLAYER_COUNT] -= 1
+                self.kill_log(killer_team_stat[TEAM_ID], killed_team_stat[TEAM_ID])
+            else:
+                killer_team_stat[PLAYER_COUNT] -= 1
+                self.kill_log(killed_team_stat[TEAM_ID], killer_team_stat[TEAM_ID])
+
+    def remaining_player(self):
+        if TEAM_A_STATS[TEAM_SIDE] == CT_SIDE:
+            print (CT_SIDE, TEAM_A_STATS[PLAYER_COUNT], 'vs.', T_SIDE, TEAM_B_STATS[PLAYER_COUNT])
+        else:
+            print(CT_SIDE, TEAM_B_STATS[PLAYER_COUNT], 'vs.', T_SIDE, TEAM_A_STATS[PLAYER_COUNT])
+        print(TXT_SPACER)
+
     def round_reset(self):
         GAME_STATES[CURRENT_ROUND] += 1
         GAME_STATES[PLANT_STATE] = False
@@ -189,6 +215,28 @@ class INIT_GAME:
         GAME_STATES[DETONATED] = False
         TEAM_A_STATS[PLAYER_COUNT] = DEFAULT_PLAYER_COUNT
         TEAM_B_STATS[PLAYER_COUNT] = DEFAULT_PLAYER_COUNT
+
+    def add_point(self,team):
+        team[POINTS] += 1
+        print(TXT_SPACER)
+        print(team[TEAM_SIDE], 'win!')
+        print(TXT_SPACER)
+
+    def side_specific_point(self, side):
+        if TEAM_A_STATS[TEAM_SIDE] == side:
+            self.add_point(TEAM_A_STATS)
+        elif TEAM_B_STATS[TEAM_SIDE] == side:
+            self.add_point(TEAM_B_STATS)
+
+    def round_winner(self):
+        if TEAM_A_STATS[PLAYER_COUNT] == 0:
+            self.add_point(TEAM_B_STATS)
+        elif TEAM_B_STATS[PLAYER_COUNT] == 0:
+            self.add_point(TEAM_A_STATS)
+        elif GAME_STATES[DETONATED] == True:
+            self.side_specific_point(T_SIDE)
+        elif GAME_STATES[DEFUSE_STATE] == True:
+            self.side_specific_point(CT_SIDE)
 
     def start(self):
         self.rolling_sides()
@@ -206,18 +254,8 @@ class INIT_GAME:
             return True
 
     def main(self):
-        if TEAM_A_STATS[TEAM_SIDE] == CT_SIDE and random.randint(0,100) <= int(TEAM_A_STATS[TEAM_CT_KD]) or TEAM_A_STATS[TEAM_SIDE] == T_SIDE and random.randint(0,100) >= int(TEAM_A_STATS[TEAM_CT_KD]):
-            TEAM_B_STATS[PLAYER_COUNT] -= 1
-            self.kill_log(TEAM_A_STATS[TEAM_ID], TEAM_B_STATS[TEAM_ID])
-        elif TEAM_B_STATS[TEAM_SIDE] == CT_SIDE and random.randint(0,100) <= int(TEAM_A_STATS[TEAM_CT_KD]) or TEAM_A_STATS[TEAM_SIDE] == T_SIDE and random .randint(0,100) >= int(TEAM_A_STATS[TEAM_CT_KD]):
-            TEAM_A_STATS[PLAYER_COUNT] -= 1
-            self.kill_log(TEAM_B_STATS[TEAM_ID], TEAM_A_STATS[TEAM_ID])
-
-    def round_on(self):
-        if TEAM_A_STATS[PLAYER_COUNT] > 0 and TEAM_B_STATS[PLAYER_COUNT] > 0:
-            return True
-        else:
-            return False
+        self.kill(TEAM_A_STATS,TEAM_B_STATS)
+        self.remaining_player()
 
 ## TESTING
 GAME = INIT_GAME(GAME_STATES)
@@ -230,8 +268,9 @@ if STARTING_SIMULATION == 'Y' or STARTING_SIMULATION == 'y':
             GAME.halftime()
         for rounds in range (HALFTIME_ROUND):
             GAME.display('call round')
-            while GAME.round_on() == True:
+            while GAME.round_active() == True:
                 GAME.main()
+            GAME.round_winner()
             GAME.round_reset()
             GAME.display('scorekeeper')
             if GAME.terminate() == True:
