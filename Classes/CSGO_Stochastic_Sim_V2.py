@@ -138,6 +138,8 @@ class INIT_GAME:
             print(TXT_SPACER)
         elif msg_type_name == 'defused':
             print('Bomb has been defused!')
+        elif msg_type_name == 'detonate':
+            print('Bomb detonated!')
         else:
             print('CALL ERROR: Not an available message type')
         print(TXT_SPACER)
@@ -188,10 +190,20 @@ class INIT_GAME:
             self.assign_ct_a()
 
     def round_active(self):
-        if TEAM_A_STATS[PLAYER_COUNT] > 0 and TEAM_B_STATS[PLAYER_COUNT] > 0:
+        if TEAM_A_STATS[PLAYER_COUNT] > 0 and TEAM_B_STATS[PLAYER_COUNT] > 0 and GAME_STATES[DEFUSE_STATE] == False and GAME_STATES[DETONATED] == False:
             return True
         else:
             return False
+
+    def round_winner(self):
+        if TEAM_A_STATS[PLAYER_COUNT] == 0:
+            self.add_point(TEAM_B_STATS)
+        elif TEAM_B_STATS[PLAYER_COUNT] == 0:
+            self.add_point(TEAM_A_STATS)
+        elif GAME_STATES[DETONATED] == True:
+            self.side_specific_point(T_SIDE)
+        elif GAME_STATES[DEFUSE_STATE] == True:
+            self.side_specific_point(CT_SIDE)
 
     def bomb_has_been_planted(self):
         GAME_STATES[PLANT_STATE] = True
@@ -245,11 +257,17 @@ class INIT_GAME:
                 if self.probability_engine(team_a, team_b, 'defuse', TEAM_CT_KD) == True:
                     GAME_STATES[DEFUSE_STATE] = True
                     self.display('defused')
+                else:
+                    GAME_STATES[DETONATED] = True
+                    self.display('detonate')
             elif team_b[TEAM_SIDE] == CT_SIDE and team_b[PLAYER_COUNT] > 0 and team_a[PLAYER_COUNT] <= 3:
                 self.display('defusing')
                 if self.probability_engine(team_b, team_a, 'defuse', TEAM_CT_KD) == True:
                     GAME_STATES[DEFUSE_STATE] = True
                     self.display('defused')
+                else:
+                    GAME_STATES[DETONATED] = True
+                    self.display('detonate')
 
     def round_reset(self):
         GAME_STATES[CURRENT_ROUND] += 1
@@ -271,16 +289,6 @@ class INIT_GAME:
             self.add_point(TEAM_A_STATS)
         elif TEAM_B_STATS[TEAM_SIDE] == side:
             self.add_point(TEAM_B_STATS)
-
-    def round_winner(self):
-        if TEAM_A_STATS[PLAYER_COUNT] == 0:
-            self.add_point(TEAM_B_STATS)
-        elif TEAM_B_STATS[PLAYER_COUNT] == 0:
-            self.add_point(TEAM_A_STATS)
-        elif GAME_STATES[DETONATED] == True:
-            self.side_specific_point(T_SIDE)
-        elif GAME_STATES[DEFUSE_STATE] == True:
-            self.side_specific_point(CT_SIDE)
 
     def start(self):
         self.rolling_sides()
