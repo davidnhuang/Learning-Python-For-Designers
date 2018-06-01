@@ -42,6 +42,7 @@ team_B_t_elim_rate = 47.8
 team_B_t_plant_rate = 53
 team_B_ct_defuse_rate = 32
 team_exchange_survival = 6 # chance of both teams surviving a gun exchange
+detonation_chance = 5
 ## GAME ENVIRONMENT
 bomb_planted = False # at the start of each round, bomb is always not planted
 bomb_defused = False # at the start of each round, because bomb is not planted, bomb is not defused
@@ -129,6 +130,14 @@ class INIT_GAME:
             print('Bomb has been planted!')
         elif msg_type_name == 'defusing':
             print('Defusing...')
+        elif msg_type_name == 'remaining':
+            if TEAM_A_STATS[TEAM_SIDE] == CT_SIDE:
+                print(CT_SIDE, TEAM_A_STATS[PLAYER_COUNT], 'vs.', T_SIDE, TEAM_B_STATS[PLAYER_COUNT])
+            else:
+                print(CT_SIDE, TEAM_B_STATS[PLAYER_COUNT], 'vs.', T_SIDE, TEAM_A_STATS[PLAYER_COUNT])
+            print(TXT_SPACER)
+        elif msg_type_name == 'defused':
+            print('Bomb has been defused!')
         else:
             print('CALL ERROR: Not an available message type')
         print(TXT_SPACER)
@@ -184,28 +193,63 @@ class INIT_GAME:
         else:
             return False
 
-    def kill(self,killer_team_stat,killed_team_stat):
-        if killer_team_stat[TEAM_SIDE] == CT_SIDE:
-            if random.randint(0,100) <= int(killer_team_stat[TEAM_CT_KD]):
-                killed_team_stat[PLAYER_COUNT] -= 1
-                self.kill_log(killer_team_stat[TEAM_ID], killed_team_stat[TEAM_ID])
-            else:
-                killer_team_stat[PLAYER_COUNT] -= 1
-                self.kill_log(killed_team_stat[TEAM_ID], killer_team_stat[TEAM_ID])
-        else:
-            if random.randint(0,100) <= int(killer_team_stat[TEAM_T_KD]):
-                killed_team_stat[PLAYER_COUNT] -= 1
-                self.kill_log(killer_team_stat[TEAM_ID], killed_team_stat[TEAM_ID])
-            else:
-                killer_team_stat[PLAYER_COUNT] -= 1
-                self.kill_log(killed_team_stat[TEAM_ID], killer_team_stat[TEAM_ID])
+    def bomb_has_been_planted(self):
+        GAME_STATES[PLANT_STATE] = True
+        GAME_STATES[PLANT_LIMIT] = True
+        self.display('bomb plant')
 
-    def remaining_player(self):
-        if TEAM_A_STATS[TEAM_SIDE] == CT_SIDE:
-            print (CT_SIDE, TEAM_A_STATS[PLAYER_COUNT], 'vs.', T_SIDE, TEAM_B_STATS[PLAYER_COUNT])
+    def probability_engine(self, team_a, team_b, type, kill_type):
+        if type == 'kill':
+            if random.randint(0,100) <= int(team_a[kill_type]):
+                team_b[PLAYER_COUNT] -= 1
+                self.kill_log(team_a[TEAM_ID], team_b[TEAM_ID])
+            else:
+                team_a[PLAYER_COUNT] -= 1
+                self.kill_log(team_b[TEAM_ID], team_a[TEAM_ID])
+        if type == 'plant':
+            if random.randint(0,100) <= int(team_a[TEAM_PLANT_RATE]):
+                self.bomb_has_been_planted()
+            else:
+                self.bomb_has_been_planted()
+        if type == 'defuse':
+            if random.randint(0,100) <= int(team_a[TEAM_DEFUSE_RATE]):
+                return True
+            else:
+                return False
+
+    def kill(self, team_a, team_b):
+        if team_a[TEAM_SIDE] == CT_SIDE:
+            self.probability_engine(team_a, team_b, 'kill', TEAM_CT_KD)
         else:
-            print(CT_SIDE, TEAM_B_STATS[PLAYER_COUNT], 'vs.', T_SIDE, TEAM_A_STATS[PLAYER_COUNT])
-        print(TXT_SPACER)
+            self.probability_engine(team_b, team_a, 'kill', TEAM_CT_KD)
+
+    def bomb_plant_confidence(self):
+        if TEAM_A_STATS[TEAM_SIDE] == T_SIDE:
+            if TEAM_A_STATS[PLAYER_COUNT] - TEAM_B_STATS[PLAYER_COUNT] >= 2 or TEAM_A_STATS[PLAYER_COUNT] >= 1 and TEAM_B_STATS[PLAYER_COUNT] == 1:
+                return True
+        else:
+            if TEAM_B_STATS[PLAYER_COUNT] - TEAM_A_STATS[PLAYER_COUNT] >= 2 or TEAM_B_STATS[PLAYER_COUNT] >= 1 and TEAM_A_STATS[PLAYER_COUNT] == 1:
+                return True
+
+    def bomb_plant(self, team_a, team_b):
+        if GAME_STATES[PLANT_LIMIT] == False and self.bomb_plant_confidence() == True:
+            if team_a[TEAM_SIDE] == T_SIDE:
+                self.probability_engine(team_a, team_b, 'plant', TEAM_CT_KD)
+            else:
+                self.probability_engine(team_b, team_a, 'plant', TEAM_CT_KD)
+
+    def defuse(self, team_a, team_b):
+        if GAME_STATES[PLANT_STATE] == True:
+            if team_a[TEAM_SIDE] == CT_SIDE and team_a[PLAYER_COUNT] > 0 and team_b[PLAYER_COUNT] <= 3:
+                self.display('defusing')
+                if self.probability_engine(team_a, team_b, 'defuse', TEAM_CT_KD) == True:
+                    GAME_STATES[DEFUSE_STATE] = True
+                    self.display('defused')
+            elif team_b[TEAM_SIDE] == CT_SIDE and team_b[PLAYER_COUNT] > 0 and team_a[PLAYER_COUNT] <= 3:
+                self.display('defusing')
+                if self.probability_engine(team_b, team_a, 'defuse', TEAM_CT_KD) == True:
+                    GAME_STATES[DEFUSE_STATE] = True
+                    self.display('defused')
 
     def round_reset(self):
         GAME_STATES[CURRENT_ROUND] += 1
@@ -255,7 +299,9 @@ class INIT_GAME:
 
     def main(self):
         self.kill(TEAM_A_STATS,TEAM_B_STATS)
-        self.remaining_player()
+        self.display('remaining')
+        self.bomb_plant(TEAM_A_STATS, TEAM_B_STATS)
+        self.defuse(TEAM_A_STATS, TEAM_B_STATS)
 
 ## TESTING
 GAME = INIT_GAME(GAME_STATES)
