@@ -5,11 +5,9 @@
 ## IMPORTS
 import random
 import time
-
 ## TEST SWTICH
 ON = False
 OFF = True
-
 ## CONSTANT
 ROUNDS_AVAILABLE = 30
 HALFTIME_ROUND = int(ROUNDS_AVAILABLE/2)
@@ -21,7 +19,6 @@ STARTING_ROUND = 0
 CT_SIDE = 'Counter Terrorists'
 T_SIDE = 'Terrorists'
 HALVES_AVAILABLE = int(ROUNDS_AVAILABLE / HALFTIME_ROUND)
-
 ## TEAM INFO
 # Team A Stats
 team_A_ID = 'Team NiP' # name
@@ -49,7 +46,6 @@ bomb_defused = False # at the start of each round, because bomb is not planted, 
 bomb_plant_limit = False # terrorists only have one chance to plant and detonate bomb; they can't plant twice
 rounds_played_tally = 0 # tallies the total number of rounds played and concluded
 bomb_detonated = False
-
 ## Lists
 # Teams
 TEAM_A_STATS = [team_A_ID, team_A_ct_elim_rate, team_A_t_elim_rate, team_A_t_plant_rate, team_A_ct_defuse_rate, team_A_side, team_A_players, team_A_points]
@@ -69,14 +65,12 @@ PLANT_STATE = 1
 DEFUSE_STATE = 2
 PLANT_LIMIT = 3
 DETONATED = 4
-
 ## TEXT DECORATION
 TXT_SPACER = ' '
 TXT_RULE_LONG = '-'*50
 TXT_RULE_SHORT = '-'*25
 TXT_DOUBLE_RULE_LONG = '='*50
 TXT_DOUBLE_RULE_SHORT = '='*25
-
 PISTOL = ['Glock-18', 'P250', 'Tec-9', 'Desert Eagle', 'Dual Berettas', 'CZ75 Auto', 'R8 Revolver', 'P2000', 'USP-S']
 RIFLE = ['MAC-10', 'PP-Bizon', 'UMP-45', 'Galil AR', 'AK-47', 'M4A4', 'M4A1-S', 'SSG-08', 'AWP']
 glados_words = ['We hope your brief detention in the relaxation vault has been a pleasant one.',
@@ -84,7 +78,7 @@ glados_words = ['We hope your brief detention in the relaxation vault has been a
           'The cake is a lie',
           'Please escort your Companion Cube to the Aperture Science Emergency Intelligence Incinerator.']
 
-test_switch = ON
+test_switch = OFF
 
 ## GLOBAL COMPONENTS
 def pause(sleep_time):
@@ -115,6 +109,8 @@ class INIT_GAME:
         elif msg_type_name == 'intro':
             print('Welcome to the Counter Strike Global Offensive game simulator')
             print('This will be a simulated game between', TEAM_A_STATS[TEAM_ID], 'and', TEAM_B_STATS[TEAM_ID])
+            print(TXT_SPACER)
+            print('Loading...')
         elif msg_type_name == 'sides':
             print(TEAM_A_STATS[TEAM_ID], 'will play as', TEAM_A_STATS[TEAM_SIDE])
             print(TEAM_B_STATS[TEAM_ID], 'will play as', TEAM_B_STATS[TEAM_SIDE])
@@ -135,7 +131,6 @@ class INIT_GAME:
                 print(CT_SIDE, TEAM_A_STATS[PLAYER_COUNT], 'vs.', T_SIDE, TEAM_B_STATS[PLAYER_COUNT])
             else:
                 print(CT_SIDE, TEAM_B_STATS[PLAYER_COUNT], 'vs.', T_SIDE, TEAM_A_STATS[PLAYER_COUNT])
-            print(TXT_SPACER)
         elif msg_type_name == 'defused':
             print('Bomb has been defused!')
         elif msg_type_name == 'detonate':
@@ -145,19 +140,15 @@ class INIT_GAME:
         print(TXT_SPACER)
         pause(1)
 
-    def kill_log(self, killer, killed):
-        print(killer, 'killed a player in', killed)
-
     def weapon_use(self):
-        if GAME_STATES[CURRENT_ROUND] == 1 or GAME_STATES[CURRENT_ROUND] == HALFTIME_ROUND:
+        if GAME_STATES[CURRENT_ROUND] == STARTING_ROUND or GAME_STATES[CURRENT_ROUND] == HALFTIME_ROUND:
             return PISTOL[random.randint(0,len(PISTOL)-1)]
         else:
             return RIFLE[random.randint(0,len(RIFLE)-1)]
 
-    def exchange_log(self, team, opposition):
-        print(TXT_SPACER)
-        print(team, 'killed a player on' ,opposition, 'with', self.weapon_use())
-        print(TXT_SPACER)
+    def kill_log(self, killer, killed):
+        print(killer, 'killed a player in', killed, 'with', self.weapon_use())
+        self.display('remaining')
 
     def assign_ct_b(self):
         TEAM_A_STATS[TEAM_SIDE] = T_SIDE
@@ -250,26 +241,26 @@ class INIT_GAME:
             else:
                 self.probability_engine(team_b, team_a, 'plant', TEAM_CT_KD)
 
+    def defuse_handler(self,slot_a,slot_b):
+        self.display('defusing')
+        pause(1)
+        if self.probability_engine(slot_a, slot_b, 'defuse', TEAM_CT_KD) == True:
+            GAME_STATES[DEFUSE_STATE] = True
+            self.display('defused')
+        else:
+            GAME_STATES[DETONATED] = True
+            self.display('detonate')
+
     def defuse(self, team_a, team_b):
         if GAME_STATES[PLANT_STATE] == True:
             if team_a[TEAM_SIDE] == CT_SIDE and team_a[PLAYER_COUNT] > 0 and team_b[PLAYER_COUNT] <= 3:
-                self.display('defusing')
-                if self.probability_engine(team_a, team_b, 'defuse', TEAM_CT_KD) == True:
-                    GAME_STATES[DEFUSE_STATE] = True
-                    self.display('defused')
-                else:
-                    GAME_STATES[DETONATED] = True
-                    self.display('detonate')
+                self.kill(TEAM_A_STATS, TEAM_B_STATS)
+                self.defuse_handler(team_a, team_b)
             elif team_b[TEAM_SIDE] == CT_SIDE and team_b[PLAYER_COUNT] > 0 and team_a[PLAYER_COUNT] <= 3:
-                self.display('defusing')
-                if self.probability_engine(team_b, team_a, 'defuse', TEAM_CT_KD) == True:
-                    GAME_STATES[DEFUSE_STATE] = True
-                    self.display('defused')
-                else:
-                    GAME_STATES[DETONATED] = True
-                    self.display('detonate')
+                self.defuse_handler(team_b, team_a)
 
     def round_reset(self):
+        GAME.display('scorekeeper')
         GAME_STATES[CURRENT_ROUND] += 1
         GAME_STATES[PLANT_STATE] = False
         GAME_STATES[DEFUSE_STATE] = False
@@ -307,11 +298,10 @@ class INIT_GAME:
 
     def main(self):
         self.kill(TEAM_A_STATS,TEAM_B_STATS)
-        self.display('remaining')
         self.bomb_plant(TEAM_A_STATS, TEAM_B_STATS)
         self.defuse(TEAM_A_STATS, TEAM_B_STATS)
 
-## TESTING
+## MAIN LOOP
 GAME = INIT_GAME(GAME_STATES)
 GAME.display('intro')
 STARTING_SIMULATION = input('Start simulation? (Y)es or (N)o : ')
@@ -326,7 +316,6 @@ if STARTING_SIMULATION == 'Y' or STARTING_SIMULATION == 'y':
                 GAME.main()
             GAME.round_winner()
             GAME.round_reset()
-            GAME.display('scorekeeper')
             if GAME.terminate() == True:
                 break
 elif STARTING_SIMULATION == 'N' or STARTING_SIMULATION == 'n':
