@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fa434a08-27bc-4670-8390-b6d40459fa0c" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py" beforeDir="false" afterPath="$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -13,49 +12,29 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.52572346">
-      <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="CSGO_Stochastic_Sim_V2.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="216">
-                  <caret line="243" lean-forward="true" selection-start-line="243" selection-end-line="243" />
-                  <folding>
-                    <element signature="e#79#92#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="CSGO_Stochastic_Sim_V2.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state>
-                  <caret column="13" selection-start-column="13" selection-end-column="13" />
-                  <folding>
-                    <element signature="e#79#92#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="CSGO_Stochastic_Simulation.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/Midterm/CSGO_Stochastic_Simulation.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-1523">
-                  <caret line="257" selection-start-line="257" selection-end-line="257" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="CSGO_Stochastic_Sim_V2.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="206">
+              <caret line="301" column="23" selection-start-line="301" selection-start-column="23" selection-end-line="301" selection-end-column="23" />
+              <folding>
+                <element signature="e#79#92#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CSGO_Stochastic_Simulation.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Midterm/CSGO_Stochastic_Simulation.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2874">
+              <caret line="257" selection-start-line="257" selection-end-line="257" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -81,6 +60,10 @@
       <find>kill_log</find>
       <find>remaining</find>
       <find>detonate</find>
+      <find>no_exchange</find>
+      <find>rolling_</find>
+      <find>assigning</find>
+      <find>TEAM_T_KD</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -109,11 +92,12 @@
         <option value="$PROJECT_DIR$/Classes/CSGO_Stochastic_Test.py" />
         <option value="$PROJECT_DIR$/Final_Project/Office_Hours.py" />
         <option value="$PROJECT_DIR$/Midterm/CSGO_Stochastic_Simulation.py" />
+        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch.py" />
         <option value="$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="y" value="22" />
     <option name="width" value="1440" />
     <option name="height" value="878" />
@@ -149,6 +133,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$2/Languages" value="Python" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
@@ -219,24 +204,6 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="Classes_Exercise" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Learning-Python-For-Designers" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="/Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Classes" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Classes/Classes_Exercise.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
     <configuration name="Office_Hours" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Learning-Python-For-Designers" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -273,20 +240,38 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
+    <configuration name="scratch" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Learning-Python-For-Designers" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="/Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6" />
+      <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/scratch.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
     <list>
-      <item itemvalue="Python.Classes_Exercise" />
       <item itemvalue="Python.CSGO_Stochastic_Sim_V2" />
       <item itemvalue="Python.CSGO_Stochastic_Test" />
       <item itemvalue="Python.Office_Hours" />
       <item itemvalue="Python.CSGO_Stochastic_Simulation" />
+      <item itemvalue="Python.scratch" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.CSGO_Stochastic_Sim_V2" />
+        <item itemvalue="Python.scratch" />
         <item itemvalue="Python.CSGO_Stochastic_Simulation" />
         <item itemvalue="Python.CSGO_Stochastic_Test" />
         <item itemvalue="Python.Office_Hours" />
-        <item itemvalue="Python.Classes_Exercise" />
       </list>
     </recent_temporary>
   </component>
@@ -304,7 +289,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="22" width="1440" height="878" extended-state="0" />
+    <frame x="0" y="23" width="1440" height="878" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13611111" />
@@ -335,6 +320,7 @@
       <path value="$PROJECT_DIR$/../Atlas" />
       <path value="$PROJECT_DIR$/../Command-Line-Repo" />
       <path value="$PROJECT_DIR$/../My-Chrome-Theme" />
+      <path value="$PROJECT_DIR$/Classes" />
     </ignored-roots>
   </component>
   <component name="XDebuggerManager">
@@ -343,13 +329,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Midterm/CSGO_Stochastic_Simulation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5310">
-          <caret line="355" column="19" lean-forward="true" selection-start-line="355" selection-start-column="19" selection-end-line="355" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -680,15 +659,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Midterm/CSGO_Stochastic_Simulation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1523">
+        <state relative-caret-position="2874">
           <caret line="257" selection-start-line="257" selection-end-line="257" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="23" lean-forward="true" selection-start-line="9" selection-start-column="23" selection-end-line="9" selection-end-column="23" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Classes/CSGO_Stochastic_Sim_V2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="243" lean-forward="true" selection-start-line="243" selection-end-line="243" />
+        <state relative-caret-position="206">
+          <caret line="301" column="23" selection-start-line="301" selection-start-column="23" selection-end-line="301" selection-end-column="23" />
           <folding>
             <element signature="e#79#92#0" expanded="true" />
           </folding>

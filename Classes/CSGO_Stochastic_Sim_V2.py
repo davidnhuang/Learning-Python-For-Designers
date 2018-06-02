@@ -5,20 +5,23 @@
 ## IMPORTS
 import random
 import time
+
 ## TEST SWTICH
 ON = False
 OFF = True
+
 ## CONSTANT
-ROUNDS_AVAILABLE = 30
-HALFTIME_ROUND = int(ROUNDS_AVAILABLE/2)
-WINNING_ROUND = HALFTIME_ROUND+1
-DEFAULT_PLAYER_COUNT = 5
-DEFAULT_TEAM_SCORE = 0
-DEFAULT_TEAM_SIDE = None
-STARTING_ROUND = 0
-CT_SIDE = 'Counter Terrorists'
-T_SIDE = 'Terrorists'
-HALVES_AVAILABLE = int(ROUNDS_AVAILABLE / HALFTIME_ROUND)
+ROUNDS_AVAILABLE = 30 # total number of rounds in a game
+HALFTIME_ROUND = int(ROUNDS_AVAILABLE/2) # halftime round is 15
+WINNING_ROUND = HALFTIME_ROUND+1 # to win the game, a team needs to reach 16 total rounds won
+DEFAULT_PLAYER_COUNT = 5 # all teams start with 5 players in each round
+DEFAULT_TEAM_SCORE = 0 # all teams start with no points
+DEFAULT_TEAM_SIDE = None # at the start of the game, neither team have decided which side they play as
+STARTING_ROUND = 0 # the first round of the game
+CT_SIDE = 'Counter Terrorists' # str ID for teams playing on the counter terrorist side
+T_SIDE = 'Terrorists' # str ID for teams playing on the terrorist side
+HALVES_AVAILABLE = int(ROUNDS_AVAILABLE / HALFTIME_ROUND) # a half is 15 rounds, or half of 30 rounds - there are 2 in one game
+
 ## TEAM INFO
 # Team A Stats
 team_A_ID = 'Team NiP' # name
@@ -45,19 +48,19 @@ bomb_planted = False # at the start of each round, bomb is always not planted
 bomb_defused = False # at the start of each round, because bomb is not planted, bomb is not defused
 bomb_plant_limit = False # terrorists only have one chance to plant and detonate bomb; they can't plant twice
 rounds_played_tally = 0 # tallies the total number of rounds played and concluded
-bomb_detonated = False
+bomb_detonated = False # bomb is not detonated at default because it wasn't planted
 ## Lists
-# Teams
-TEAM_A_STATS = [team_A_ID, team_A_ct_elim_rate, team_A_t_elim_rate, team_A_t_plant_rate, team_A_ct_defuse_rate, team_A_side, team_A_players, team_A_points]
-TEAM_B_STATS = [team_B_ID, team_B_ct_elim_rate, team_B_t_elim_rate, team_B_t_plant_rate, team_B_ct_defuse_rate, team_B_side, team_B_players, team_B_points]
+# Team's stats aggregated into a list for easier handling
+TEAM_A_STATS = [team_A_ID, team_A_ct_elim_rate, team_A_t_plant_rate, team_A_ct_defuse_rate, team_A_side, team_A_players, team_A_points]
+TEAM_B_STATS = [team_B_ID, team_B_ct_elim_rate, team_B_t_plant_rate, team_B_ct_defuse_rate, team_B_side, team_B_players, team_B_points]
+# Tags for which data to call from the list
 TEAM_ID = 0
 TEAM_CT_KD = 1
-TEAM_T_KD = 2
-TEAM_PLANT_RATE = 3
-TEAM_DEFUSE_RATE = 4
-TEAM_SIDE = 5
-PLAYER_COUNT = 6
-POINTS = 7
+TEAM_PLANT_RATE = 2
+TEAM_DEFUSE_RATE = 3
+TEAM_SIDE = 4
+PLAYER_COUNT = 5
+POINTS = 6
 # Game
 GAME_STATES = [rounds_played_tally, bomb_planted, bomb_defused, bomb_plant_limit, bomb_detonated,]
 CURRENT_ROUND = 0
@@ -77,18 +80,14 @@ glados_words = ['We hope your brief detention in the relaxation vault has been a
           'Perfect. Please move quickly to the chamberlock, as the effects of prolonged exposure to the Button are not part of this test.',
           'The cake is a lie',
           'Please escort your Companion Cube to the Aperture Science Emergency Intelligence Incinerator.']
-
-test_switch = OFF
+test_switch = ON # this switch turns stalled text on and off
 
 ## GLOBAL COMPONENTS
-def pause(sleep_time):
+def pause(sleep_time): # this method allows users to pass a designated stall time between texts
     if test_switch == OFF:
         time.sleep(sleep_time)
     elif test_switch == ON:
         time.sleep(0)
-
-def no_exchange(team_ct_kd):
-    return team_ct_kd[TEAM_CT_KD] + team_exchange_survival
 
 def glados():
     quote_selection = random.randint(0,3)
@@ -120,8 +119,6 @@ class INIT_GAME:
             print('Half time. Switching sides...')
         elif msg_type_name == 'scorekeeper':
             print(TEAM_A_STATS[TEAM_ID], ':', TEAM_A_STATS[POINTS], ' | ', TEAM_B_STATS[TEAM_ID], ':', TEAM_B_STATS[POINTS])
-        elif msg_type_name == 'no kill':
-            print('No one is killed yet.')
         elif msg_type_name == 'bomb plant':
             print('Bomb has been planted!')
         elif msg_type_name == 'defusing':
@@ -150,6 +147,13 @@ class INIT_GAME:
         print(killer, 'killed a player in', killed, 'with', self.weapon_use())
         self.display('remaining')
 
+    def idle_log(self):
+        print('No one is killed yet.')
+        self.display('remaining')
+
+    def no_exchange(self, team):  #
+        return team[TEAM_CT_KD] + team_exchange_survival
+
     def assign_ct_b(self):
         TEAM_A_STATS[TEAM_SIDE] = T_SIDE
         TEAM_B_STATS[TEAM_SIDE] = CT_SIDE
@@ -168,7 +172,7 @@ class INIT_GAME:
             return decided_side
 
     def assigning_team(self):
-        if TEAM_A_STATS[TEAM_SIDE] == CT_SIDE:
+        if self.rolling_sides()[0] == TEAM_A_STATS[TEAM_ID]:
             self.assign_ct_a()
         else:
             self.assign_ct_b()
@@ -206,6 +210,8 @@ class INIT_GAME:
             if random.randint(0,100) <= int(team_a[kill_type]):
                 team_b[PLAYER_COUNT] -= 1
                 self.kill_log(team_a[TEAM_ID], team_b[TEAM_ID])
+            elif self.no_exchange(team_a) <= random.randint(0,100) >= team_a[TEAM_CT_KD]:
+                self.idle_log()
             else:
                 team_a[PLAYER_COUNT] -= 1
                 self.kill_log(team_b[TEAM_ID], team_a[TEAM_ID])
@@ -255,7 +261,6 @@ class INIT_GAME:
     def defuse(self, team_a, team_b):
         if GAME_STATES[PLANT_STATE] == True:
             if team_a[TEAM_SIDE] == CT_SIDE and team_a[PLAYER_COUNT] > 0 and team_b[PLAYER_COUNT] <= 2:
-                self.kill(TEAM_A_STATS, TEAM_B_STATS)
                 self.defuse_handler(team_a, team_b)
             elif team_b[TEAM_SIDE] == CT_SIDE and team_b[PLAYER_COUNT] > 0 and team_a[PLAYER_COUNT] <= 2:
                 self.defuse_handler(team_b, team_a)
@@ -283,7 +288,6 @@ class INIT_GAME:
             self.add_point(TEAM_B_STATS)
 
     def start(self):
-        self.rolling_sides()
         self.assigning_team()
         self.display('sides')
 
