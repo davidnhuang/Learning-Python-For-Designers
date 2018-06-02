@@ -240,6 +240,7 @@ class INIT_GAME:
                 self.probability_engine(team_a, team_b, 'plant', TEAM_CT_KD)
             else:
                 self.probability_engine(team_b, team_a, 'plant', TEAM_CT_KD)
+            self.kill(TEAM_A_STATS, TEAM_B_STATS)
 
     def defuse_handler(self,slot_a,slot_b):
         self.display('defusing')
@@ -253,10 +254,10 @@ class INIT_GAME:
 
     def defuse(self, team_a, team_b):
         if GAME_STATES[PLANT_STATE] == True:
-            if team_a[TEAM_SIDE] == CT_SIDE and team_a[PLAYER_COUNT] > 0 and team_b[PLAYER_COUNT] <= 3:
+            if team_a[TEAM_SIDE] == CT_SIDE and team_a[PLAYER_COUNT] > 0 and team_b[PLAYER_COUNT] <= 2:
                 self.kill(TEAM_A_STATS, TEAM_B_STATS)
                 self.defuse_handler(team_a, team_b)
-            elif team_b[TEAM_SIDE] == CT_SIDE and team_b[PLAYER_COUNT] > 0 and team_a[PLAYER_COUNT] <= 3:
+            elif team_b[TEAM_SIDE] == CT_SIDE and team_b[PLAYER_COUNT] > 0 and team_a[PLAYER_COUNT] <= 2:
                 self.defuse_handler(team_b, team_a)
 
     def round_reset(self):
