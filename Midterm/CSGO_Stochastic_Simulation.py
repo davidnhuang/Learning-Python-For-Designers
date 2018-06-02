@@ -352,8 +352,7 @@ if start_input == 'Y' or start_input == 'y':
             round_number_callout()
             time.sleep(1.5) # pause
 
-            # -------------- ROUND -------------- #\\
-            kill_time = time.time()
+            # -------------- ROUND -------------- #
             while TeamA_stats[3] > 0 and TeamB_stats[3] > 0: # while both team are alive
                 print('')
                 bomb_planted_counter = 0
