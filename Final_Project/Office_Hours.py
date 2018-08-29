@@ -23,8 +23,11 @@ pygame.display.set_caption('OFFICE HOURS.exe') # sets the title for the window
 ## Nice use of variables to store your program's data
 ## Including the lists data structure for the dialogue
 
+# RENDERING LOCATION (CHANGE THIS PATH TO WHERE YOU SAVED THE GAME DIRECTORY)
+GAME_DIRECTORY = '/Users/david/Documents/GitHub/Learning-Python-For-Designers/Final_Project'
+
 # font family
-GAME_FONT_FAMILY = '/Users/david/Documents/GitHub/Learning-Python-For-Designers/Final_Project/uni0553-webfont.ttf'
+GAME_FONT_FAMILY = GAME_DIRECTORY + '/uni0553-webfont.ttf'
 TITLE_FONT_SIZE = 40 # largest font size 40 px for titles
 SUBTITLE_FONT_SIZE = 20 # 20px for subtitles
 INTERFACE_FONT_SIZE = 12 # smallest font size for ingame computer
@@ -183,8 +186,6 @@ COMPUTER_LINE_11 = (CUSTOMER_CHAT_BUBBLE, SCREEN_SIZE * 0.60)
 # backgrounds (EX = exterior, IN = interior, FO = foreground)
 # outdoor background (office hours)
 #----- 6.0 PNGs -----#
-# TODO - RENDERING LOCATION (CHANGE THIS PATH TO WHERE YOU SAVED THE GAME DIRECTORY)
-GAME_DIRECTORY = '/Users/david/Documents/GitHub/Learning-Python-For-Designers/Final_Project'
 
 # 6.1 player Character
 # Jerry Sprite facing right
