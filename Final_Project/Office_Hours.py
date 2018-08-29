@@ -10,8 +10,6 @@
 # Version 1.1 - Alpha
 # Nov 22 2017
 
-# 'People are capable, at any time in their lives, of doing what they dream of.' - The Alchemist
-
 # Imports
 import pygame
 import random
@@ -26,7 +24,7 @@ pygame.display.set_caption('OFFICE HOURS.exe') # sets the title for the window
 ## Including the lists data structure for the dialogue
 
 # font family
-GAME_FONT_FAMILY = '/Users/alexander/Documents/ArtCenter/ProblemSets/Final Project/Submissions/DavidHuang/Final_Project_aux/assets/uni0553-webfont.ttf'
+GAME_FONT_FAMILY = '/Users/david/Documents/GitHub/Learning-Python-For-Designers/Final_Project/uni0553-webfont.ttf'
 TITLE_FONT_SIZE = 40 # largest font size 40 px for titles
 SUBTITLE_FONT_SIZE = 20 # 20px for subtitles
 INTERFACE_FONT_SIZE = 12 # smallest font size for ingame computer
@@ -186,7 +184,7 @@ COMPUTER_LINE_11 = (CUSTOMER_CHAT_BUBBLE, SCREEN_SIZE * 0.60)
 # outdoor background (office hours)
 #----- 6.0 PNGs -----#
 # TODO - RENDERING LOCATION (CHANGE THIS PATH TO WHERE YOU SAVED THE GAME DIRECTORY)
-GAME_DIRECTORY = '/Users/alexander/Documents/ArtCenter/ProblemSets/Final Project/Submissions/DavidHuang/Final_Project_aux'
+GAME_DIRECTORY = '/Users/david/Documents/GitHub/Learning-Python-For-Designers/Final_Project'
 
 # 6.1 player Character
 # Jerry Sprite facing right
@@ -199,63 +197,63 @@ HOMELESS_GUY_PNG = GAME_DIRECTORY + '/assets/character/homeless_guy-01.png'
 
 # 6.2 background PNG
 # 6.2.1 outdoor environment
-OFFICE_EX_BG = GAME_DIRECTORY + '/assets/scene bg/Office_exterior.png'
-BAR_EX_BG = GAME_DIRECTORY + '/assets/scene bg/Bar_exterior.png'
-APARTMENT_EX_BG = GAME_DIRECTORY + '/assets/scene bg/Apartment_exterior.png'
-FOREST_1 = GAME_DIRECTORY + '/assets/scene bg/Forest_1.png'
-FOREST_2 = GAME_DIRECTORY + '/assets/scene bg/Forest_2.png'
-FOREST_3 = GAME_DIRECTORY + '/assets/scene bg/Forest_3.png'
-CAVE = GAME_DIRECTORY + '/assets/scene bg/Cave.png'
-TREASURE_END = GAME_DIRECTORY + '/assets/scene bg/Cave_3.png'
-CITY_END = GAME_DIRECTORY + '/assets/scene bg/End_of_city.png'
-HIGHWAY_END = GAME_DIRECTORY + '/assets/scene bg/Highway_end.png'
-BUS_STOP_BG = [GAME_DIRECTORY + '/assets/scene bg/Bus_stop.png',
-               GAME_DIRECTORY + '/assets/scene bg/Bus_stop_a.png']
-HIGHWAY_1 = [GAME_DIRECTORY + '/assets/scene bg/Highway_1.png',
-             GAME_DIRECTORY + '/assets/scene bg/Highway_1_a.png']
-HIGHWAY_2 = [GAME_DIRECTORY + '/assets/scene bg/Highway_2.png',
-             GAME_DIRECTORY + '/assets/scene bg/Highway_2_a.png']
+OFFICE_EX_BG = GAME_DIRECTORY + '/assets/BG/Office_exterior.png'
+BAR_EX_BG = GAME_DIRECTORY + '/assets/BG/Bar_exterior.png'
+APARTMENT_EX_BG = GAME_DIRECTORY + '/assets/BG/Apartment_exterior.png'
+FOREST_1 = GAME_DIRECTORY + '/assets/BG/Forest_1.png'
+FOREST_2 = GAME_DIRECTORY + '/assets/BG/Forest_2.png'
+FOREST_3 = GAME_DIRECTORY + '/assets/BG/Forest_3.png'
+CAVE = GAME_DIRECTORY + '/assets/BG/Cave.png'
+TREASURE_END = GAME_DIRECTORY + '/assets/BG/Cave_3.png'
+CITY_END = GAME_DIRECTORY + '/assets/BG/End_of_city.png'
+HIGHWAY_END = GAME_DIRECTORY + '/assets/BG/Highway_end.png'
+BUS_STOP_BG = [GAME_DIRECTORY + '/assets/BG/Bus_stop.png',
+               GAME_DIRECTORY + '/assets/BG/Bus_stop_a.png']
+HIGHWAY_1 = [GAME_DIRECTORY + '/assets/BG/Highway_1.png',
+             GAME_DIRECTORY + '/assets/BG/Highway_1_a.png']
+HIGHWAY_2 = [GAME_DIRECTORY + '/assets/BG/Highway_2.png',
+             GAME_DIRECTORY + '/assets/BG/Highway_2_a.png']
 
 # 6.2.2 indoor environment
-OFFICE_INTERIOR_1 = GAME_DIRECTORY + '/assets/scene bg/Inside_Office_1_A.png'
-OFFICE_INTERIOR_2 = [GAME_DIRECTORY + '/assets/scene bg/Inside_Office_2.png',
-                     GAME_DIRECTORY + '/assets/scene bg/Inside_Office_2_A.png']
-OFFICE_INTERIOR_3 = [GAME_DIRECTORY + '/assets/scene bg/Inside_Office_3.png',
-                     GAME_DIRECTORY + '/assets/scene bg/Inside_Office_3_A.png']
-OFFICE_END = [GAME_DIRECTORY + '/assets/scene bg/Office_End.png',
-              GAME_DIRECTORY + '/assets/scene bg/Office_End_a.png']
-BAR_INTERIOR = [GAME_DIRECTORY + '/assets/scene bg/Bar_interior.png',
-                GAME_DIRECTORY + '/assets/scene bg/Bar_interior_afterwork.png']
-APARTMENT_INTERIOR = [GAME_DIRECTORY + '/assets/scene bg/Apartment_Interior.png',
-                       GAME_DIRECTORY + '/assets/scene bg/Apartment_Interior_a.png']
-COMPUTER_SCREEN = GAME_DIRECTORY + '/assets/scene bg/Screen.png'
+OFFICE_INTERIOR_1 = GAME_DIRECTORY + '/assets/BG/Inside_Office_1_A.png'
+OFFICE_INTERIOR_2 = [GAME_DIRECTORY + '/assets/BG/Inside_Office_2.png',
+                     GAME_DIRECTORY + '/assets/BG/Inside_Office_2_A.png']
+OFFICE_INTERIOR_3 = [GAME_DIRECTORY + '/assets/BG/Inside_Office_3.png',
+                     GAME_DIRECTORY + '/assets/BG/Inside_Office_3_A.png']
+OFFICE_END = [GAME_DIRECTORY + '/assets/BG/Office_End.png',
+              GAME_DIRECTORY + '/assets/BG/Office_End_a.png']
+BAR_INTERIOR = [GAME_DIRECTORY + '/assets/BG/Bar_interior.png',
+                GAME_DIRECTORY + '/assets/BG/Bar_interior_afterwork.png']
+APARTMENT_INTERIOR = [GAME_DIRECTORY + '/assets/BG/Apartment_Interior.png',
+                       GAME_DIRECTORY + '/assets/BG/Apartment_Interior_a.png']
+COMPUTER_SCREEN = GAME_DIRECTORY + '/assets/BG/Screen.png'
 
 # 6.2.3 foreground
-FO_LAMPS = GAME_DIRECTORY + '/assets/scene bg/foreground_lamp-01.png'
-FO_BUS_STOP = GAME_DIRECTORY + '/assets/scene bg/Bus_stop_FO.png'
-FO_CITY_END = GAME_DIRECTORY + '/assets/scene bg/City_end_FO.png'
-FO_ROAD_END = GAME_DIRECTORY + '/assets/scene bg/Road_End_FO.png'
-FO_FOREST_1 = GAME_DIRECTORY + '/assets/scene bg/Forest_1_FO.png'
-FO_FOREST_2 = GAME_DIRECTORY + '/assets/scene bg/Forest_2_FO.png'
-FO_FOREST_3 = GAME_DIRECTORY + '/assets/scene bg/Forest_3_FO.png'
-FO_CAVE = GAME_DIRECTORY + '/assets/scene bg/Cave_FO.png'
+FO_LAMPS = GAME_DIRECTORY + '/assets/BG/foreground_lamp-01.png'
+FO_BUS_STOP = GAME_DIRECTORY + '/assets/BG/Bus_stop_FO.png'
+FO_CITY_END = GAME_DIRECTORY + '/assets/BG/City_end_FO.png'
+FO_ROAD_END = GAME_DIRECTORY + '/assets/BG/Road_End_FO.png'
+FO_FOREST_1 = GAME_DIRECTORY + '/assets/BG/Forest_1_FO.png'
+FO_FOREST_2 = GAME_DIRECTORY + '/assets/BG/Forest_2_FO.png'
+FO_FOREST_3 = GAME_DIRECTORY + '/assets/BG/Forest_3_FO.png'
+FO_CAVE = GAME_DIRECTORY + '/assets/BG/Cave_FO.png'
 
-# 6.2.4 in-game items
-WATER_COOLER_NOTE = GAME_DIRECTORY + '/assets/items/water_cooler_note.png'
-GET_OUT_NOTE = GAME_DIRECTORY + '/assets/items/homeless_note.png'
-FIRST_CLUE = GAME_DIRECTORY + '/assets/items/first_clue.png'
-SECOND_CLUE = GAME_DIRECTORY + '/assets/items/second_clue.png'
-FLASHLIGHT_PNG = GAME_DIRECTORY + '/assets/items/flashlight.png'
-KEY_PNG = GAME_DIRECTORY + '/assets/items/key.png'
-MOMS_NOTE = GAME_DIRECTORY + '/assets/items/mom_note.png'
-BAR_MENU = GAME_DIRECTORY + '/assets/items/bar_menu.png'
+# 6.2.4 in-game Obj
+WATER_COOLER_NOTE = GAME_DIRECTORY + '/assets/Obj/water_cooler_note.png'
+GET_OUT_NOTE = GAME_DIRECTORY + '/assets/Obj/homeless_note.png'
+FIRST_CLUE = GAME_DIRECTORY + '/assets/Obj/first_clue.png'
+SECOND_CLUE = GAME_DIRECTORY + '/assets/Obj/second_clue.png'
+FLASHLIGHT_PNG = GAME_DIRECTORY + '/assets/Obj/flashlight.png'
+KEY_PNG = GAME_DIRECTORY + '/assets/Obj/key.png'
+MOMS_NOTE = GAME_DIRECTORY + '/assets/Obj/mom_note.png'
+BAR_MENU = GAME_DIRECTORY + '/assets/Obj/bar_menu.png'
 
 # 6.2.5 game screens
-STARTING_SCREEN_PNG = GAME_DIRECTORY + '/assets/scene bg/starting.png'
-INTRO_SCREEN_PNG = GAME_DIRECTORY + '/assets/scene bg/intro.png'
+STARTING_SCREEN_PNG = GAME_DIRECTORY + '/assets/BG/starting.png'
+INTRO_SCREEN_PNG = GAME_DIRECTORY + '/assets/BG/intro.png'
 
-GOOD_ENDING_SCREEN = GAME_DIRECTORY + '/assets/scene bg/Good_Ending.png'
-POOR_ENDING_SCREEN = GAME_DIRECTORY + '/assets/scene bg/Poor_Ending.png'
+GOOD_ENDING_SCREEN = GAME_DIRECTORY + '/assets/BG/Good_Ending.png'
+POOR_ENDING_SCREEN = GAME_DIRECTORY + '/assets/BG/Poor_Ending.png'
 
 
 # character positioning
@@ -577,8 +575,8 @@ def chat_dialogues(YEARS_COUNT): # displays all the dialogue between Jerry and C
         chat_bubble_4(YEARS_COUNT) # changes user's name base on the year Jerry has been working
         change_respond_prompt()
 
-# items found / notes
-def world_items():
+# Obj found / notes
+def world_Obj():
     if INDOOR == True:
         water_cooler_note = collision(JERRY_X_IN, water_cooler_stop, SCREEN_SIZE)
         moms_note = collision(JERRY_X_IN, moms_note_min, moms_note_max)
@@ -713,7 +711,7 @@ while not GAME_EXIT:
                         if apartment_exit_door == True: # if he is near the door of his room
                             INDOOR = False # upon keypress, Jerry leaves the building
                             INTERIOR_BG_RENDER = INDOOR_LOCATION[0] # reset the indoor background
-            # SPACE KEY - USE / READ ITEMS / INTERACTING WITH THE WORLD
+            # SPACE KEY - USE / READ Obj / INTERACTING WITH THE WORLD
             elif event.key == pygame.K_SPACE:
                 # indoor
                 computer_open = collision(JERRY_X_IN, computer_min, computer_max)
@@ -837,7 +835,7 @@ while not GAME_EXIT:
         BACKGROUND_NIGHT_DAY = 1 # set the day to night
         OPEN_COMPUTER = False
     # Layer 1
-    world_items()
+    world_Obj()
     # SLEEP FUNCTION
     if END_OF_DAY_MESSAGE == True:
         end_of_day_message()
